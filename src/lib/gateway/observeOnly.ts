@@ -9,6 +9,9 @@ import { useSyncExternalStore } from "react";
  */
 let observeOnly = false;
 let approvalDecisions: readonly string[] | null = null;
+export type RunnerWorkspace = { id: string; label: string };
+export type RunnerOptions = { workspaces: RunnerWorkspace[]; defaultWorkspaceId: string | null };
+let runnerOptions: RunnerOptions | null = null;
 const listeners = new Set<() => void>();
 const notify = () => {
   for (const listener of listeners) listener();
@@ -24,6 +27,30 @@ export const setApprovalDecisions = (next: readonly string[] | null | undefined)
   const normalized = Array.isArray(next) ? next : null;
   if (JSON.stringify(normalized) === JSON.stringify(approvalDecisions)) return;
   approvalDecisions = normalized;
+  notify();
+};
+
+export const setRunnerOptions = (next: unknown): void => {
+  let normalized: RunnerOptions | null = null;
+  if (next && typeof next === "object") {
+    const raw = next as { workspaces?: unknown; defaultWorkspaceId?: unknown };
+    const workspaces = Array.isArray(raw.workspaces)
+      ? raw.workspaces.flatMap((entry): RunnerWorkspace[] => {
+          const e = entry as { id?: unknown; label?: unknown };
+          return typeof e?.id === "string" && e.id
+            ? [{ id: e.id, label: typeof e.label === "string" && e.label ? e.label : e.id }]
+            : [];
+        })
+      : [];
+    if (workspaces.length > 0) {
+      normalized = {
+        workspaces,
+        defaultWorkspaceId: typeof raw.defaultWorkspaceId === "string" ? raw.defaultWorkspaceId : workspaces[0].id,
+      };
+    }
+  }
+  if (JSON.stringify(normalized) === JSON.stringify(runnerOptions)) return;
+  runnerOptions = normalized;
   notify();
 };
 
@@ -44,3 +71,7 @@ export const useAllowAlwaysApproval = (): boolean =>
     () => approvalDecisions === null || approvalDecisions.includes("allow-always"),
     () => true,
   );
+
+/** Workspaces the gateway lets new avatars work in (null when it offers none). */
+export const useRunnerOptions = (): RunnerOptions | null =>
+  useSyncExternalStore(subscribe, () => runnerOptions, () => null);

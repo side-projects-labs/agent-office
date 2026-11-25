@@ -170,7 +170,7 @@ const METHODS = [
   "exec.approval.resolve", "wake", "skills.status", "models.list", "cron.list",
 ];
 
-function buildHello(state, { readOnly = true } = {}) {
+function buildHello(state, { readOnly = true, runner } = {}) {
   const agents = [...state.agents.values()];
   return {
     type: "hello-ok",
@@ -183,6 +183,7 @@ function buildHello(state, { readOnly = true } = {}) {
       readOnly,
       // The runner only supports one-shot decisions; the UI hides "Always allow".
       approvalDecisions: ["allow-once", "deny"],
+      ...(runner ? { runner } : {}),
       events: ["chat", "presence", "heartbeat", "agent", "exec.approval.requested", "exec.approval.resolved"],
     },
     snapshot: {

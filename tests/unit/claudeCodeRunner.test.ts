@@ -37,7 +37,7 @@ describe("claude-code runner", () => {
     runner = createRunner({
       state,
       broadcast: (f: any) => frames.push(f),
-      workdir: dir,
+      workspaces: [{ id: "default", label: "default", path: dir }],
       eventsPath: path.join(dir, "events.jsonl"),
       adapterUrl: "http://127.0.0.1:1",
       claudeBin: fake,
@@ -154,7 +154,7 @@ describe("runner busy state", () => {
     const runner = createRunner({
       state,
       broadcast: (f: any) => frames.push(f),
-      workdir: dir,
+      workspaces: [{ id: "default", label: "default", path: dir }],
       eventsPath: path.join(dir, "events.jsonl"),
       adapterUrl: "http://127.0.0.1:1",
       claudeBin: path.resolve(__dirname, "../fixtures/fake-claude-linger.js"),
@@ -190,7 +190,7 @@ describe("runner persona", () => {
     const runner = createRunner({
       state,
       broadcast: (f: any) => frames.push(f),
-      workdir: dir,
+      workspaces: [{ id: "default", label: "default", path: dir }],
       eventsPath: path.join(dir, "events.jsonl"),
       adapterUrl: "http://127.0.0.1:1",
       claudeBin: path.resolve(__dirname, "../fixtures/fake-claude.js"),
@@ -206,10 +206,15 @@ describe("runner persona", () => {
     return call.args as string[];
   };
 
-  it("passes the persona on every run via --append-system-prompt, and omits it when off", async () => {
+  it("passes the persona on every run via --append-system-prompt; off drops only the base rules", async () => {
     const withPersona = await runWith();
-    expect(withPersona[withPersona.indexOf("--append-system-prompt") + 1]).toBe(DEFAULT_PERSONA);
+    const prompt = withPersona[withPersona.indexOf("--append-system-prompt") + 1];
+    expect(prompt.startsWith(DEFAULT_PERSONA)).toBe(true);
+    expect(prompt).toContain('이름은 "P"');
+
     const off = await runWith("");
-    expect(off).not.toContain("--append-system-prompt");
+    const offPrompt = off[off.indexOf("--append-system-prompt") + 1];
+    expect(offPrompt).not.toContain(DEFAULT_PERSONA);
+    expect(offPrompt).toContain('이름은 "P"');
   });
 });

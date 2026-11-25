@@ -23,7 +23,7 @@ import type {
   StudioSettingsResponse,
 } from "@/lib/studio/coordinator";
 import { resolveStudioProxyGatewayUrl } from "@/lib/gateway/proxy-url";
-import { setApprovalDecisions, setObserveOnly } from "@/lib/gateway/observeOnly";
+import { setApprovalDecisions, setObserveOnly, setRunnerOptions } from "@/lib/gateway/observeOnly";
 import { ensureGatewayReloadModeHotForLocalStudio } from "@/lib/gateway/gatewayReloadMode";
 import { isLocalGatewayUrl } from "@/lib/gateway/local-gateway";
 import { GatewayResponseError } from "@/lib/gateway/errors";
@@ -303,6 +303,7 @@ export class GatewayClient {
         this.lastHello = hello;
         setObserveOnly(hello.features?.readOnly === true);
         setApprovalDecisions(hello.features?.approvalDecisions);
+        setRunnerOptions(hello.features?.runner);
         this.updateStatus("connected");
         this.resolveConnect?.();
         this.clearConnectPromise();

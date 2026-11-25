@@ -7,9 +7,10 @@
  * translates hook events to Claw3D gateway frames (claude-code/core.js), and
  * serves them over the gateway WebSocket protocol (claude-code/methods.js).
  *
- * Runner mode (opt-in): set AGENT_OFFICE_WORKDIR to a directory. Avatars created
- * from the UI then run work via `claude -p` (claude-code/runner.js) in that
- * directory, and permission requests are answered from the UI.
+ * Runner mode (opt-in): configure at least one workspace (AGENT_OFFICE_WORKDIR
+ * or ~/.agent-office/config.json, see claude-code/config.js). Avatars created
+ * from the UI then run work via `claude -p` (claude-code/runner.js) in their
+ * workspace, and permission requests are answered from the UI.
  */
 
 const fs = require("fs");
@@ -22,11 +23,13 @@ const { WebSocketServer } = require("ws");
 const { createState, applyHookEvent } = require("./claude-code/core");
 const { createHandler, buildHello, resOk, resErr } = require("./claude-code/methods");
 const { createRunner } = require("./claude-code/runner");
+const { loadConfig } = require("./claude-code/config");
+const { createProfileStore } = require("./claude-code/store");
 
 const PORT = parseInt(process.env.CLAUDE_ADAPTER_PORT || process.env.DEMO_ADAPTER_PORT || "18789", 10);
 const EVENTS_PATH =
   process.env.AGENT_OFFICE_EVENTS || path.join(os.homedir(), ".agent-office", "events.jsonl");
-const WORKDIR = process.env.AGENT_OFFICE_WORKDIR ? path.resolve(process.env.AGENT_OFFICE_WORKDIR) : "";
+const runnerConfig = loadConfig();
 const POLL_MS = 300;
 const APPROVAL_TTL_MS = 9 * 60 * 1000;
 
@@ -48,19 +51,22 @@ function broadcast(frame) {
 let runner = null;
 
 function setupRunner() {
-  if (!WORKDIR) return null;
-  if (!fs.existsSync(WORKDIR) || !fs.statSync(WORKDIR).isDirectory()) {
-    console.error(`[claude-code-adapter] AGENT_OFFICE_WORKDIR is not a directory: ${WORKDIR}`);
-    process.exit(1);
-  }
-  return createRunner({
+  for (const warning of runnerConfig.warnings) console.warn(`[claude-code-adapter] ${warning}`);
+  if (runnerConfig.workspaces.length === 0) return null;
+  const store = createProfileStore();
+  const created = createRunner({
     state,
     broadcast,
-    workdir: WORKDIR,
+    workspaces: runnerConfig.workspaces,
+    defaultWorkspaceId: runnerConfig.defaultWorkspaceId,
+    store,
     eventsPath: EVENTS_PATH,
     adapterUrl: `http://127.0.0.1:${PORT}`,
     log: (m) => console.log(m),
   });
+  const restored = created.restore(store.load());
+  if (restored > 0) console.log(`[claude-code-adapter] restored ${restored} avatar(s) from ${store.file}`);
+  return created;
 }
 
 async function handleMethod(method, params, id) {
@@ -68,8 +74,35 @@ async function handleMethod(method, params, id) {
   if (runner) {
     switch (method) {
       case "agents.create": {
-        const agent = runner.createAgent({ name: p.name, role: p.role });
-        return resOk(id, { agentId: agent.id, name: agent.name, workspace: agent.workspace });
+        try {
+          const agent = runner.createAgent({
+            name: p.name,
+            role: p.role,
+            workspaceId: typeof p.workspaceId === "string" ? p.workspaceId : undefined,
+          });
+          return resOk(id, { agentId: agent.id, name: agent.name, workspace: agent.workspace });
+        } catch (err) {
+          return resErr(id, err.code || "create_failed", err.message);
+        }
+      }
+      case "agents.update": {
+        const agentId = typeof p.agentId === "string" ? p.agentId : "";
+        if (typeof p.name === "string" && !runner.renameAgent(agentId, p.name)) break;
+        return resOk(id, { ok: true, removedBindings: 0 });
+      }
+      case "agents.files.get": {
+        const agentId = typeof p.agentId === "string" ? p.agentId : "";
+        if (!state.agents.get(agentId)?.managed) break;
+        const content = runner.getFile(agentId, String(p.name || ""));
+        return resOk(id, { file: content !== undefined ? { content } : { missing: true } });
+      }
+      case "agents.files.set": {
+        const agentId = typeof p.agentId === "string" ? p.agentId : "";
+        if (!state.agents.get(agentId)?.managed) break;
+        if (!runner.setFile(agentId, String(p.name || ""), p.content)) {
+          return resErr(id, "invalid_file", "Invalid file name.");
+        }
+        return resOk(id, {});
       }
       case "agents.delete": {
         runner.removeAgent(typeof p.agentId === "string" ? p.agentId : "");
@@ -259,7 +292,20 @@ function startAdapter() {
 
       if (method === "connect") {
         connected = true;
-        send({ type: "res", id, ok: true, payload: buildHello(state, { readOnly: !runner }) });
+        send({
+          type: "res",
+          id,
+          ok: true,
+          payload: buildHello(state, {
+            readOnly: !runner,
+            runner: runner
+              ? {
+                  workspaces: runner.config.workspaces.map((w) => ({ id: w.id, label: w.label })),
+                  defaultWorkspaceId: runner.config.defaultWorkspaceId,
+                }
+              : undefined,
+          }),
+        });
         return;
       }
       if (!connected) return send(resErr(id, "not_connected", "Send connect first."));
@@ -279,7 +325,9 @@ function startAdapter() {
     console.log(`[claude-code-adapter] tailing ${EVENTS_PATH}`);
     if (runner) {
       const c = runner.config;
-      console.log(`[claude-code-adapter] runner workdir: ${c.workdir}`);
+      for (const w of c.workspaces) {
+        console.log(`[claude-code-adapter] workspace ${w.id}${w.id === c.defaultWorkspaceId ? " (default)" : ""}: ${w.path}`);
+      }
       console.log(`[claude-code-adapter] model ${c.model}, max ${c.maxTurns} turns, est. budget cap $${c.maxBudgetUsd}/run`);
       console.log(`[claude-code-adapter] persona: ${c.persona ? "on (default: Korean replies, code untouched)" : "off"}`);
       console.log(`[claude-code-adapter] auto-allowed tools: ${c.allowedTools.join(", ")} (everything else asks in the UI)`);

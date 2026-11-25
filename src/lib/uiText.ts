@@ -31,6 +31,8 @@ const STRINGS = {
     trayTitle: "Approval needed",
     trayRemaining: "left",
     trayPending: "pending",
+    workspaceLabel: "Workspace",
+    workspaceHint: "The folder this avatar works in. It cannot read or change files outside it without asking.",
   },
   ko: {
     emptyHint: "작업, 버그, 질문을 자유롭게 설명해 주세요.",
@@ -54,6 +56,8 @@ const STRINGS = {
     trayTitle: "승인 대기",
     trayRemaining: "남음",
     trayPending: "건 대기 중",
+    workspaceLabel: "작업 폴더",
+    workspaceHint: "이 아바타가 일하는 폴더입니다. 폴더 밖의 파일은 승인 없이 읽거나 바꿀 수 없습니다.",
   },
 } as const;
 

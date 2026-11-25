@@ -6,7 +6,7 @@ const args = process.argv.slice(2);
 if (process.env.FAKE_CLAUDE_LOG) {
   fs.appendFileSync(
     process.env.FAKE_CLAUDE_LOG,
-    `${JSON.stringify({ args, hasApiKey: "ANTHROPIC_API_KEY" in process.env, agentId: process.env.AGENT_OFFICE_AGENT_ID })}\n`,
+    `${JSON.stringify({ args, hasApiKey: "ANTHROPIC_API_KEY" in process.env, agentId: process.env.AGENT_OFFICE_AGENT_ID, cwd: process.cwd() })}\n`,
   );
 }
 const sid = args[args.indexOf("--session-id") + 1] || args[args.indexOf("--resume") + 1];

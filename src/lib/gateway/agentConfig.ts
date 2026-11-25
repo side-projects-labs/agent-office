@@ -393,6 +393,8 @@ const joinPathLike = (dir: string, leaf: string): string => {
 export const createGatewayAgent = async (params: {
   client: GatewayClient;
   name: string;
+  /** Runner gateways only: which configured folder the avatar works in. */
+  workspaceId?: string;
 }): Promise<ConfigAgentEntry> => {
   const trimmed = params.name.trim();
   if (!trimmed) {
@@ -418,6 +420,7 @@ export const createGatewayAgent = async (params: {
   const result = (await params.client.call("agents.create", {
     name: trimmed,
     workspace,
+    ...(params.workspaceId ? { workspaceId: params.workspaceId } : {}),
   })) as { ok?: boolean; agentId?: string; name?: string; workspace?: string };
   const agentId = typeof result?.agentId === "string" ? result.agentId.trim() : "";
   if (!agentId) {

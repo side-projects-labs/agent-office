@@ -2206,7 +2206,7 @@ export function OfficeScreen({
     return `Deleting ${deleteAgentBlock.agentName}.`;
   }, [deleteAgentBlock]);
   const handleCreateAgentFromIdentity = useCallback(
-    async (identity: AgentIdentityValues) => {
+    async (identity: AgentIdentityValues & { workspaceId?: string }) => {
       let createdAgentId: string | null = null;
       const success = await runCreateAgentMutationLifecycle(
         {
@@ -2222,7 +2222,11 @@ export function OfficeScreen({
         {
           enqueueConfigMutation,
           createAgent: async (name) => {
-            const created = await createGatewayAgent({ client, name });
+            const created = await createGatewayAgent({
+              client,
+              name,
+              workspaceId: identity.workspaceId,
+            });
             const files = buildIdentityFileDraft(identity);
             await writeGatewayAgentFiles({
               client,

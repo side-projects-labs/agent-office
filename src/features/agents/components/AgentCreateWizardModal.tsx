@@ -19,6 +19,8 @@ import {
   createDefaultAgentAvatarProfile,
   type AgentAvatarProfile,
 } from "@/lib/avatars/profile";
+import { useRunnerOptions } from "@/lib/gateway/observeOnly";
+import { t } from "@/lib/uiText";
 import { randomUUID } from "@/lib/uuid";
 
 type AgentCreateWizardModalProps = {
@@ -28,7 +30,7 @@ type AgentCreateWizardModalProps = {
   submitError?: string | null;
   statusLine?: string | null;
   onClose: (createdAgentId: string | null) => void;
-  onCreateAgent: (identity: AgentIdentityValues) => Promise<string | null>;
+  onCreateAgent: (identity: AgentIdentityValues & { workspaceId?: string }) => Promise<string | null>;
   onFinishWizard: (params: {
     agentId: string;
     draft: PersonalityBuilderDraft;
@@ -180,6 +182,13 @@ export function AgentCreateWizardModal({
     createDefaultAgentAvatarProfile(randomUUID()),
   );
   const [finishing, setFinishing] = useState(false);
+  const runnerOptions = useRunnerOptions();
+  const [pickedWorkspaceId, setPickedWorkspaceId] = useState<string | null>(null);
+  const workspaceId = runnerOptions
+    ? (pickedWorkspaceId && runnerOptions.workspaces.some((w) => w.id === pickedWorkspaceId)
+        ? pickedWorkspaceId
+        : runnerOptions.defaultWorkspaceId ?? runnerOptions.workspaces[0].id)
+    : undefined;
 
   const canCreate = useMemo(() => draft.identity.name.trim().length > 0, [draft.identity.name]);
   const activeStepIndex = wizardSteps.findIndex((entry) => entry.id === step);
@@ -207,6 +216,7 @@ export function AgentCreateWizardModal({
           creature: draft.identity.creature,
           vibe: draft.identity.vibe,
           emoji: draft.identity.emoji,
+          ...(workspaceId ? { workspaceId } : {}),
         });
         if (!agentId) return;
         setCreatedAgentId(agentId);
@@ -365,6 +375,25 @@ export function AgentCreateWizardModal({
                     });
                   }}
                 />
+                {runnerOptions ? (
+                  <label className="mt-4 flex flex-col gap-2 text-xs text-muted-foreground">
+                    {t("workspaceLabel")}
+                    <select
+                      className={inputClassName}
+                      value={workspaceId}
+                      disabled={isWorking || Boolean(createdAgentId)}
+                      onChange={(event) => setPickedWorkspaceId(event.target.value)}
+                      data-testid="create-agent-workspace"
+                    >
+                      {runnerOptions.workspaces.map((workspace) => (
+                        <option key={workspace.id} value={workspace.id}>
+                          {workspace.label}
+                        </option>
+                      ))}
+                    </select>
+                    <span className="text-[11px] text-muted-foreground/80">{t("workspaceHint")}</span>
+                  </label>
+                ) : null}
               </section>
 
               <div className="mt-6 rounded-xl border border-border/45 bg-muted/20 p-4 text-sm text-muted-foreground">

@@ -251,20 +251,23 @@ function applyHookEvent(state, ev) {
 }
 
 /** Create (or return) a runner-managed avatar that exists before any session. */
-function createManagedAgent(state, { id, name, role, workspace, sessionId }) {
+function createManagedAgent(state, { id, name, role, workspace, workspaceId, sessionId, files, started, totalCostUsd }) {
   const agent = {
     id,
     sessionId,
     name,
     role: role || "Claude Code",
     workspace,
+    workspaceId: workspaceId || null,
+    files: files && typeof files === "object" ? { ...files } : {},
     runId: null,
     nextRunId: null,
     pendingApprovalId: null,
     history: [],
     updatedAt: Date.now(),
     managed: true,
-    started: false,
+    started: Boolean(started),
+    totalCostUsd: typeof totalCostUsd === "number" ? totalCostUsd : 0,
   };
   state.agents.set(id, agent);
   return agent;
