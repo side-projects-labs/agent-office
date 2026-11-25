@@ -133,16 +133,33 @@ export const upsertConfigAgentEntry = (
   return { list: nextList, entry: updatedEntry };
 };
 
+// Short, stable suffix derived from the full name (FNV-1a, base36).
+const hashName = (name: string): string => {
+  let hash = 0x811c9dc5;
+  for (const char of name.normalize("NFC")) {
+    hash ^= char.codePointAt(0) ?? 0;
+    hash = Math.imul(hash, 0x01000193) >>> 0;
+  }
+  return hash.toString(36).slice(0, 6).padStart(4, "0");
+};
+
 export const slugifyAgentName = (name: string): string => {
-  const slug = name
-    .trim()
+  const trimmed = name.trim();
+  const asciiSlug = trimmed
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
-  if (!slug) {
+  // Names written in other scripts (e.g. Korean) lose their letters in the ASCII
+  // slug, which would be empty or collide ("테스터1" and "빌더1" -> "1"). Keep any
+  // ASCII part and add a stable hash of the whole name so each stays unique.
+  const hasNonAsciiWord = Array.from(trimmed).some((char) => char.charCodeAt(0) > 127 && /[\p{L}\p{N}]/u.test(char));
+  if (hasNonAsciiWord) {
+    return `${asciiSlug || "agent"}-${hashName(trimmed)}`;
+  }
+  if (!asciiSlug) {
     throw new Error("Name produced an empty folder name.");
   }
-  return slug;
+  return asciiSlug;
 };
 
 const coerceString = (value: unknown) => (typeof value === "string" ? value : undefined);

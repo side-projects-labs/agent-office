@@ -1,5 +1,8 @@
 import "@testing-library/jest-dom/vitest";
 
+// Upstream tests assert English strings; the app defaults to Korean.
+process.env.NEXT_PUBLIC_UI_LOCALE = "en";
+
 const ensureLocalStorage = () => {
   if (typeof window === "undefined") return;
   const existing = window.localStorage as unknown as Record<string, unknown> | undefined;

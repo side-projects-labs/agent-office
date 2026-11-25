@@ -94,7 +94,9 @@ async function handleMethod(method, params, id) {
         const approvalId = typeof p.id === "string" ? p.id : "";
         const pending = pendingApprovals.get(approvalId);
         if (!pending) return resOk(id, { ok: true });
-        pending.resolve(typeof p.decision === "string" ? p.decision : "deny", "ui");
+        // The runner only grants one-shot approvals (the UI hides "Always allow").
+        const decision = p.decision === "allow-once" || p.decision === "allow-always" ? "allow-once" : "deny";
+        pending.resolve(decision, "ui");
         return resOk(id, { ok: true });
       }
       default:

@@ -181,6 +181,8 @@ function buildHello(state, { readOnly = true } = {}) {
     features: {
       methods: METHODS,
       readOnly,
+      // The runner only supports one-shot decisions; the UI hides "Always allow".
+      approvalDecisions: ["allow-once", "deny"],
       events: ["chat", "presence", "heartbeat", "agent", "exec.approval.requested", "exec.approval.resolved"],
     },
     snapshot: {

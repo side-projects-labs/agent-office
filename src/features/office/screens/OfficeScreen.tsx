@@ -181,6 +181,7 @@ import {
 } from "@/features/onboarding";
 import { IS_REPLAY_MODE } from "@/lib/replayMode";
 import { useOfficeExecApprovals } from "@/features/office/hooks/useOfficeExecApprovals";
+import { OfficeApprovalTray } from "@/features/office/components/OfficeApprovalTray";
 import { useFinalizedAssistantReplyListener } from "@/hooks/useFinalizedAssistantReplyListener";
 import { useStudioOfficePreference } from "@/hooks/useStudioOfficePreference";
 import { isRemoteOfficeAgentId } from "@/features/retro-office/core/district";
@@ -5106,6 +5107,18 @@ export function OfficeScreen({
           handleOpenAgentChat(agentId);
           setMarketplaceOpen(false);
           router.push("/office");
+        }}
+      />
+
+      <OfficeApprovalTray
+        approvals={officeApprovals.approvals}
+        agentName={(agentId) =>
+          state.agents.find((entry) => entry.agentId === agentId)?.name ??
+          agentId ??
+          "agent"
+        }
+        onResolve={(approvalId, decision) => {
+          void officeApprovals.resolve(approvalId, decision);
         }}
       />
 

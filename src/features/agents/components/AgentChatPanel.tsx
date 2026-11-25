@@ -1,4 +1,5 @@
-import { useObserveOnly } from "@/lib/gateway/observeOnly";
+import { useAllowAlwaysApproval, useObserveOnly } from "@/lib/gateway/observeOnly";
+import { EMPTY_CHAT_INTROS, t } from "@/lib/uiText";
 import {
   memo,
   useCallback,
@@ -59,13 +60,7 @@ const CHAT_SELECT_STYLE = {
   backgroundColor: "#17120a",
   color: "#ffffff",
 } as const;
-const EMPTY_CHAT_INTRO_MESSAGES = [
-  "How can I help you today?",
-  "What should we accomplish today?",
-  "Ready when you are. What do you want to tackle?",
-  "What are we working on today?",
-  "I'm here and ready. What's the plan?",
-];
+const EMPTY_CHAT_INTRO_MESSAGES = EMPTY_CHAT_INTROS;
 const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 
 type UploadAttachment = {
@@ -85,7 +80,7 @@ const stableStringHash = (value: string): number => {
 };
 
 const resolveEmptyChatIntroMessage = (agentId: string, sessionEpoch: number | undefined): string => {
-  if (EMPTY_CHAT_INTRO_MESSAGES.length === 0) return "How can I help you today?";
+  if (EMPTY_CHAT_INTRO_MESSAGES.length === 0) return t("composerPlaceholder");
   const normalizedEpoch =
     typeof sessionEpoch === "number" && Number.isFinite(sessionEpoch)
       ? Math.max(0, Math.trunc(sessionEpoch))
@@ -171,21 +166,22 @@ const ExecApprovalCard = memo(function ExecApprovalCard({
   onResolve?: (id: string, decision: ExecApprovalDecision) => void;
 }) {
   const disabled = approval.resolving || !onResolve;
+  const allowAlways = useAllowAlwaysApproval();
   return (
     <div
       className={`w-full ${ASSISTANT_MAX_WIDTH_EXPANDED_CLASS} ${ASSISTANT_GUTTER_CLASS} ui-badge-approval self-start rounded-md px-3 py-2 shadow-2xs`}
       data-testid={`exec-approval-card-${approval.id}`}
     >
       <div className="type-meta">
-        Exec approval required
+        {t("approvalTitle")}
       </div>
       <div className="mt-2 rounded-md bg-surface-3 px-2 py-1.5 shadow-2xs">
         <div className="font-mono text-[10px] font-semibold text-foreground">{approval.command}</div>
       </div>
       <div className="mt-2 grid gap-1 text-[11px] text-muted-foreground sm:grid-cols-2">
-        <div>Host: {approval.host ?? "unknown"}</div>
-        <div>Expires: {formatApprovalExpiry(approval.expiresAtMs)}</div>
-        {approval.cwd ? <div className="sm:col-span-2">CWD: {approval.cwd}</div> : null}
+        <div>{t("approvalHost")}: {approval.host ?? t("unknown")}</div>
+        <div>{t("approvalExpires")}: {formatApprovalExpiry(approval.expiresAtMs)}</div>
+        {approval.cwd ? <div className="sm:col-span-2">{t("approvalCwd")}: {approval.cwd}</div> : null}
       </div>
       {approval.error ? (
         <div className="ui-alert-danger mt-2 rounded-md px-2 py-1 text-[11px] shadow-2xs">
@@ -200,17 +196,19 @@ const ExecApprovalCard = memo(function ExecApprovalCard({
           disabled={disabled}
           aria-label={`Allow once for exec approval ${approval.id}`}
         >
-          Allow once
+          {t("approvalAllowOnce")}
         </button>
-        <button
-          type="button"
-          className="rounded-md border border-border/70 bg-surface-3 px-2.5 py-1 font-mono text-[12px] font-medium tracking-[0.02em] text-foreground transition hover:bg-surface-2 disabled:cursor-not-allowed disabled:opacity-60"
-          onClick={() => onResolve?.(approval.id, "allow-always")}
-          disabled={disabled}
-          aria-label={`Always allow for exec approval ${approval.id}`}
-        >
-          Always allow
-        </button>
+        {allowAlways ? (
+          <button
+            type="button"
+            className="rounded-md border border-border/70 bg-surface-3 px-2.5 py-1 font-mono text-[12px] font-medium tracking-[0.02em] text-foreground transition hover:bg-surface-2 disabled:cursor-not-allowed disabled:opacity-60"
+            onClick={() => onResolve?.(approval.id, "allow-always")}
+            disabled={disabled}
+            aria-label={`Always allow for exec approval ${approval.id}`}
+          >
+            {t("approvalAllowAlways")}
+          </button>
+        ) : null}
         <button
           type="button"
           className="ui-btn-danger rounded-md px-2.5 py-1 font-mono text-[12px] font-medium tracking-[0.02em] transition disabled:cursor-not-allowed disabled:opacity-60"
@@ -218,7 +216,7 @@ const ExecApprovalCard = memo(function ExecApprovalCard({
           disabled={disabled}
           aria-label={`Deny exec approval ${approval.id}`}
         >
-          Deny
+          {t("approvalDeny")}
         </button>
       </div>
     </div>
@@ -555,7 +553,7 @@ const AssistantIntroCard = memo(function AssistantIntroCard({
         <div className="ui-chat-assistant-card mt-2">
           <div className="text-[14px] leading-[1.65] text-foreground">{title}</div>
           <div className="mt-2 font-mono text-[10px] tracking-[0.03em] text-muted-foreground/80">
-            Try describing a task, bug, or question to get started.
+            {t("emptyHint")}
           </div>
         </div>
       </div>
@@ -966,12 +964,12 @@ const AgentChatComposer = memo(function AgentChatComposer({
   const voiceDisabled = voiceRecording ? false : !voiceEnabled || !voiceSupported || !canSend || voiceBusy;
   const voiceLabel =
     voiceState === "recording"
-      ? "Stop"
+      ? t("voiceStop")
       : voiceState === "transcribing"
         ? "..."
         : voiceState === "requesting"
-          ? "Mic..."
-          : "Mic";
+          ? t("micRequesting")
+          : t("mic");
   const voiceStatusText =
     voiceState === "recording"
       ? "Recording. Tap stop to send."
@@ -1133,7 +1131,7 @@ const AgentChatComposer = memo(function AgentChatComposer({
                 disabled
                 className="invisible rounded-md border border-border/70 bg-surface-3 px-3 py-2 font-mono text-[12px] font-medium tracking-[0.02em] text-foreground"
               >
-                {stopBusy ? "Stopping" : "Stop"}
+                {stopBusy ? t("stopping") : t("stop")}
               </button>
             ) : null}
             <button
@@ -1213,8 +1211,8 @@ const AgentChatComposer = memo(function AgentChatComposer({
             onKeyDown={onKeyDown}
             placeholder={
               observeOnly
-                ? "Observe-only: this office mirrors live Claude Code sessions"
-                : "type a message"
+                ? t("composerObserveOnly")
+                : t("composerPlaceholder")
             }
             disabled={observeOnly}
           />
@@ -1228,7 +1226,7 @@ const AgentChatComposer = memo(function AgentChatComposer({
           >
             <span className="inline-flex items-center gap-1.5">
               <Paperclip className="h-3.5 w-3.5" />
-              <span>Attach</span>
+              <span>{t("attach")}</span>
             </span>
           </button>
           {voiceEnabled ? (
@@ -1270,7 +1268,7 @@ const AgentChatComposer = memo(function AgentChatComposer({
             onClick={onSend}
             disabled={sendDisabled || observeOnly}
           >
-            Send
+            {t("send")}
           </button>
         </div>
       </div>
