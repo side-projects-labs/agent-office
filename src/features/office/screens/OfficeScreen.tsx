@@ -180,6 +180,7 @@ import {
   useOnboardingState,
 } from "@/features/onboarding";
 import { IS_REPLAY_MODE } from "@/lib/replayMode";
+import { useOfficeExecApprovals } from "@/features/office/hooks/useOfficeExecApprovals";
 import { useFinalizedAssistantReplyListener } from "@/hooks/useFinalizedAssistantReplyListener";
 import { useStudioOfficePreference } from "@/hooks/useStudioOfficePreference";
 import { isRemoteOfficeAgentId } from "@/features/retro-office/core/district";
@@ -1027,6 +1028,7 @@ export function OfficeScreen({
   const lastLoadAgentsStartedAtRef = useRef(0);
   const lastGatewayActivityAtRef = useRef(0);
   const stateRef = useRef(state);
+  const officeApprovals = useOfficeExecApprovals({ client, agents: state.agents });
   const officeTriggerStateRef = useRef(officeTriggerState);
   const historyInFlightRef = useRef<Set<string>>(new Set());
   const lastTransportHistoryRefreshKeyRef = useRef<Record<string, string>>({});
@@ -5462,6 +5464,12 @@ export function OfficeScreen({
                 <AgentChatPanel
                   agent={focusedChatAgent}
                   isSelected={false}
+                  pendingExecApprovals={officeApprovals.forAgent(
+                    focusedChatAgent.agentId,
+                  )}
+                  onResolveExecApproval={(approvalId, decision) => {
+                    void officeApprovals.resolve(approvalId, decision);
+                  }}
                   canSend={status === "connected"}
                   models={gatewayModels}
                   stopBusy={

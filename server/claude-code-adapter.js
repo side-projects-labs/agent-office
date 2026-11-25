@@ -1,10 +1,15 @@
 "use strict";
 
 /**
- * Claude Code gateway adapter (read-only observer).
- * Tails events.jsonl written by claude-code/hook.js, translates hook events to
- * Claw3D gateway frames (claude-code/core.js), and serves them over the same
- * WebSocket protocol as demo-gateway-adapter.js (claude-code/methods.js).
+ * Claude Code gateway adapter.
+ *
+ * Observe mode (default): tails events.jsonl written by claude-code/hook.js,
+ * translates hook events to Claw3D gateway frames (claude-code/core.js), and
+ * serves them over the gateway WebSocket protocol (claude-code/methods.js).
+ *
+ * Runner mode (opt-in): set AGENT_OFFICE_WORKDIR to a directory. Avatars created
+ * from the UI then run work via `claude -p` (claude-code/runner.js) in that
+ * directory, and permission requests are answered from the UI.
  */
 
 const fs = require("fs");
@@ -15,16 +20,20 @@ const { randomUUID } = require("crypto");
 const { WebSocketServer } = require("ws");
 
 const { createState, applyHookEvent } = require("./claude-code/core");
-const { createHandler, buildHello, resErr } = require("./claude-code/methods");
+const { createHandler, buildHello, resOk, resErr } = require("./claude-code/methods");
+const { createRunner } = require("./claude-code/runner");
 
 const PORT = parseInt(process.env.CLAUDE_ADAPTER_PORT || process.env.DEMO_ADAPTER_PORT || "18789", 10);
 const EVENTS_PATH =
   process.env.AGENT_OFFICE_EVENTS || path.join(os.homedir(), ".agent-office", "events.jsonl");
+const WORKDIR = process.env.AGENT_OFFICE_WORKDIR ? path.resolve(process.env.AGENT_OFFICE_WORKDIR) : "";
 const POLL_MS = 300;
+const APPROVAL_TTL_MS = 9 * 60 * 1000;
 
 const state = createState();
-const handleMethod = createHandler(state);
+const baseHandler = createHandler(state);
 const clients = new Set();
+const pendingApprovals = new Map(); // id -> { resolve, timer }
 
 const randomId = () => randomUUID().replace(/-/g, "");
 
@@ -34,6 +43,137 @@ function broadcast(frame) {
       send(frame);
     } catch {}
   }
+}
+
+let runner = null;
+
+function setupRunner() {
+  if (!WORKDIR) return null;
+  if (!fs.existsSync(WORKDIR) || !fs.statSync(WORKDIR).isDirectory()) {
+    console.error(`[claude-code-adapter] AGENT_OFFICE_WORKDIR is not a directory: ${WORKDIR}`);
+    process.exit(1);
+  }
+  return createRunner({
+    state,
+    broadcast,
+    workdir: WORKDIR,
+    eventsPath: EVENTS_PATH,
+    adapterUrl: `http://127.0.0.1:${PORT}`,
+    log: (m) => console.log(m),
+  });
+}
+
+async function handleMethod(method, params, id) {
+  const p = params || {};
+  if (runner) {
+    switch (method) {
+      case "agents.create": {
+        const agent = runner.createAgent({ name: p.name, role: p.role });
+        return resOk(id, { agentId: agent.id, name: agent.name, workspace: agent.workspace });
+      }
+      case "agents.delete": {
+        runner.removeAgent(typeof p.agentId === "string" ? p.agentId : "");
+        return resOk(id, { ok: true, removedBindings: 0 });
+      }
+      case "chat.send": {
+        const sessionKey = typeof p.sessionKey === "string" ? p.sessionKey : "";
+        const agentId = sessionKey.startsWith("agent:") ? sessionKey.split(":")[1] : "";
+        const runId = typeof p.idempotencyKey === "string" && p.idempotencyKey ? p.idempotencyKey : randomId();
+        const result = runner.send({ agentId, message: p.message, runId });
+        if (!result.ok) return resErr(id, result.code, result.message);
+        return resOk(id, { status: "started", runId });
+      }
+      case "chat.abort": {
+        const aborted = runner.abort({
+          runId: typeof p.runId === "string" ? p.runId.trim() : "",
+          agentId: typeof p.sessionKey === "string" && p.sessionKey.startsWith("agent:") ? p.sessionKey.split(":")[1] : "",
+        });
+        return resOk(id, { ok: true, aborted });
+      }
+      case "exec.approval.resolve": {
+        const approvalId = typeof p.id === "string" ? p.id : "";
+        const pending = pendingApprovals.get(approvalId);
+        if (!pending) return resOk(id, { ok: true });
+        pending.resolve(typeof p.decision === "string" ? p.decision : "deny", "ui");
+        return resOk(id, { ok: true });
+      }
+      default:
+        break;
+    }
+  }
+  return baseHandler(method, params, id);
+}
+
+/** POST /approval from approval-hook.js: hold the request until the UI decides. */
+function handleApprovalRequest(req, res) {
+  const remote = req.socket.remoteAddress || "";
+  if (!(remote === "127.0.0.1" || remote === "::1" || remote === "::ffff:127.0.0.1")) {
+    res.writeHead(403).end();
+    return;
+  }
+  let body = "";
+  req.setEncoding("utf8");
+  req.on("data", (c) => {
+    body += c;
+    if (body.length > 1_000_000) req.destroy();
+  });
+  req.on("end", () => {
+    let data;
+    try {
+      data = JSON.parse(body);
+    } catch {
+      res.writeHead(400).end();
+      return;
+    }
+    const agent = state.agents.get(data.agent_id);
+    if (!runner || !agent || !agent.managed) {
+      res.writeHead(200, { "Content-Type": "application/json" }).end(JSON.stringify({ decision: "deny" }));
+      return;
+    }
+    const createdAtMs = Date.now();
+    const id = `approval-${randomId().slice(0, 12)}`;
+    const input = data.tool_input && typeof data.tool_input === "object" ? data.tool_input : {};
+    const command =
+      typeof input.command === "string" && input.command
+        ? input.command
+        : `${data.tool_name || "tool"} ${JSON.stringify(input).slice(0, 200)}`;
+
+    let settled = false;
+    const settle = (decision, by) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      pendingApprovals.delete(id);
+      broadcast({
+        type: "event",
+        event: "exec.approval.resolved",
+        payload: { id, decision, resolvedBy: by, ts: Date.now() },
+      });
+      if (!res.writableEnded) {
+        res.writeHead(200, { "Content-Type": "application/json" }).end(JSON.stringify({ decision }));
+      }
+    };
+    const timer = setTimeout(() => settle("deny", "timeout"), APPROVAL_TTL_MS);
+    pendingApprovals.set(id, { resolve: settle });
+    // If the hook process goes away (run aborted), drop the prompt from the UI.
+    res.on("close", () => settle("deny", "closed"));
+
+    broadcast({
+      type: "event",
+      event: "exec.approval.requested",
+      payload: {
+        id,
+        request: {
+          command,
+          cwd: typeof data.cwd === "string" ? data.cwd : agent.workspace,
+          agentId: agent.id,
+          sessionKey: `agent:${agent.id}:main`,
+        },
+        createdAtMs,
+        expiresAtMs: createdAtMs + APPROVAL_TTL_MS,
+      },
+    });
+  });
 }
 
 function ingestLine(line) {
@@ -79,9 +219,15 @@ function startTail() {
 }
 
 function startAdapter() {
+  runner = setupRunner();
+
   const httpServer = http.createServer((req, res) => {
+    if (req.method === "POST" && req.url === "/approval") {
+      handleApprovalRequest(req, res);
+      return;
+    }
     res.writeHead(200, { "Content-Type": "text/plain" });
-    res.end("Claw3D Claude Code Gateway Adapter (observe-only)\n");
+    res.end(`Claw3D Claude Code Gateway Adapter (${runner ? "runner" : "observe-only"})\n`);
   });
   const wss = new WebSocketServer({ server: httpServer });
 
@@ -111,7 +257,7 @@ function startAdapter() {
 
       if (method === "connect") {
         connected = true;
-        send({ type: "res", id, ok: true, payload: buildHello(state) });
+        send({ type: "res", id, ok: true, payload: buildHello(state, { readOnly: !runner }) });
         return;
       }
       if (!connected) return send(resErr(id, "not_connected", "Send connect first."));
@@ -127,9 +273,28 @@ function startAdapter() {
 
   startTail();
   httpServer.listen(PORT, "127.0.0.1", () => {
-    console.log(`[claude-code-adapter] ws://localhost:${PORT} (observe-only)`);
+    console.log(`[claude-code-adapter] ws://localhost:${PORT} (${runner ? "runner" : "observe-only"})`);
     console.log(`[claude-code-adapter] tailing ${EVENTS_PATH}`);
+    if (runner) {
+      const c = runner.config;
+      console.log(`[claude-code-adapter] runner workdir: ${c.workdir}`);
+      console.log(`[claude-code-adapter] model ${c.model}, max ${c.maxTurns} turns, est. budget cap $${c.maxBudgetUsd}/run`);
+      console.log(`[claude-code-adapter] persona: ${c.persona ? "on (default: Korean replies, code untouched)" : "off"}`);
+      console.log(`[claude-code-adapter] auto-allowed tools: ${c.allowedTools.join(", ")} (everything else asks in the UI)`);
+      console.log(
+        c.allowApiKey
+          ? "[claude-code-adapter] WARNING: AGENT_OFFICE_ALLOW_API_KEY=1, runs may bill your API key"
+          : "[claude-code-adapter] ANTHROPIC_API_KEY is removed from runner processes (uses your Claude login)",
+      );
+    }
   });
+
+  const shutdown = () => {
+    runner?.stopAll();
+    process.exit(0);
+  };
+  process.on("SIGINT", shutdown);
+  process.on("SIGTERM", shutdown);
 }
 
 if (require.main === module) startAdapter();

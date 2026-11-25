@@ -70,7 +70,8 @@ function presenceFrame(state) {
 function ensureAgent(state, ev) {
   const sessionId = ev.session_id;
   if (!sessionId) return { agent: null, created: false };
-  const id = agentIdFor(sessionId);
+  // Runner-managed processes tag their hook events with the avatar they belong to.
+  const id = ev.office_agent_id || agentIdFor(sessionId);
   let agent = state.agents.get(id);
   if (agent) {
     agent.updatedAt = ev.ts || Date.now();
@@ -111,7 +112,8 @@ function chatFrame(agent, chatState, extra, state) {
 }
 
 function startRun(agent, ev, state, frames) {
-  agent.runId = `run-${agent.id}-${ev.ts || Date.now()}`;
+  agent.runId = agent.nextRunId || `run-${agent.id}-${ev.ts || Date.now()}`;
+  agent.nextRunId = null;
   frames.push(agentFrame(agent, "lifecycle", { phase: "start" }, state));
 }
 
@@ -151,7 +153,7 @@ function applyHookEvent(state, ev) {
     case "UserPromptSubmit": {
       resolveApproval(agent, ev, state, frames);
       startRun(agent, ev, state, frames);
-      if (typeof ev.prompt === "string") {
+      if (typeof ev.prompt === "string" && !agent.managed) {
         agent.history.push({ role: "user", content: ev.prompt });
       }
       break;
@@ -221,17 +223,20 @@ function applyHookEvent(state, ev) {
     case "Stop": {
       resolveApproval(agent, ev, state, frames);
       if (!agent.runId) break;
-      const text = "Done.";
-      agent.history.push({ role: "assistant", content: text });
-      frames.push(
-        chatFrame(agent, "final", { stopReason: "end_turn", message: { role: "assistant", content: text } }, state),
-      );
+      if (!agent.managed) {
+        const text = "Done.";
+        agent.history.push({ role: "assistant", content: text });
+        frames.push(
+          chatFrame(agent, "final", { stopReason: "end_turn", message: { role: "assistant", content: text } }, state),
+        );
+      }
       frames.push(agentFrame(agent, "lifecycle", { phase: "end" }, state));
       agent.runId = null;
       break;
     }
 
     case "SessionEnd": {
+      if (agent.managed) break;
       state.agents.delete(agent.id);
       agentsChanged = true;
       break;
@@ -245,7 +250,38 @@ function applyHookEvent(state, ev) {
   return { frames, agentsChanged };
 }
 
+/** Create (or return) a runner-managed avatar that exists before any session. */
+function createManagedAgent(state, { id, name, role, workspace, sessionId }) {
+  const agent = {
+    id,
+    sessionId,
+    name,
+    role: role || "Claude Code",
+    workspace,
+    runId: null,
+    nextRunId: null,
+    pendingApprovalId: null,
+    history: [],
+    updatedAt: Date.now(),
+    managed: true,
+    started: false,
+  };
+  state.agents.set(id, agent);
+  return agent;
+}
+
+/** Chat event for an explicit run (the runner owns chat text for managed agents). */
+function chatEvent(agentId, runId, chatState, extra = {}) {
+  return {
+    type: "event",
+    event: "chat",
+    payload: { runId, sessionKey: sessionKeyFor(agentId), state: chatState, ...extra },
+  };
+}
+
 module.exports = {
+  createManagedAgent,
+  chatEvent,
   createState,
   applyHookEvent,
   agentIdFor,

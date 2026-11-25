@@ -170,7 +170,7 @@ const METHODS = [
   "exec.approval.resolve", "wake", "skills.status", "models.list", "cron.list",
 ];
 
-function buildHello(state) {
+function buildHello(state, { readOnly = true } = {}) {
   const agents = [...state.agents.values()];
   return {
     type: "hello-ok",
@@ -180,7 +180,7 @@ function buildHello(state) {
     adapterType: "demo",
     features: {
       methods: METHODS,
-      readOnly: true,
+      readOnly,
       events: ["chat", "presence", "heartbeat", "agent", "exec.approval.requested", "exec.approval.resolved"],
     },
     snapshot: {

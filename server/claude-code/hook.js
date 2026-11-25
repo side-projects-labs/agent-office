@@ -26,6 +26,7 @@ process.stdin.on("end", () => {
       ts: Date.now(),
       event: raw.hook_event_name,
       session_id: raw.session_id,
+      office_agent_id: process.env.AGENT_OFFICE_AGENT_ID || undefined,
       cwd: raw.cwd,
       tool_name: raw.tool_name,
       tool_input: raw.tool_input,
