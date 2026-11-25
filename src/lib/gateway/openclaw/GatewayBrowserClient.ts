@@ -369,7 +369,7 @@ export type GatewayHelloOk = {
   type: "hello-ok";
   protocol: number;
   adapterType?: "openclaw" | "hermes" | "demo" | "custom";
-  features?: { methods?: string[]; events?: string[] };
+  features?: { methods?: string[]; events?: string[]; readOnly?: boolean };
   snapshot?: unknown;
   auth?: {
     deviceToken?: string;

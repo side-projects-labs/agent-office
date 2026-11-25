@@ -179,6 +179,7 @@ import {
   OnboardingWizard,
   useOnboardingState,
 } from "@/features/onboarding";
+import { IS_REPLAY_MODE } from "@/lib/replayMode";
 import { useFinalizedAssistantReplyListener } from "@/hooks/useFinalizedAssistantReplyListener";
 import { useStudioOfficePreference } from "@/hooks/useStudioOfficePreference";
 import { isRemoteOfficeAgentId } from "@/features/retro-office/core/district";
@@ -4813,7 +4814,7 @@ export function OfficeScreen({
           onAgentChatSelect={(agentId) => {
             handleOpenAgentChat(agentId);
           }}
-          onAddAgent={handleOpenCreateAgentWizard}
+          onAddAgent={IS_REPLAY_MODE ? undefined : handleOpenCreateAgentWizard}
           onAgentEdit={(agentId) => {
             openAgentEditor(agentId, "avatar");
           }}
@@ -5008,7 +5009,7 @@ export function OfficeScreen({
         </div>
       ) : null}
 
-      {!debugEnabled ? (
+      {!debugEnabled && !IS_REPLAY_MODE ? (
         <HQSidebar
           open={sidebarOpen}
           activeTab={activeSidebarTab}

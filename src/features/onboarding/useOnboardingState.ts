@@ -6,6 +6,8 @@
  */
 import { useCallback, useEffect, useState } from "react";
 
+import { IS_REPLAY_MODE } from "@/lib/replayMode";
+
 const STORAGE_KEY = "claw3d:onboarding:completed";
 
 const readCompleted = (): boolean => {
@@ -59,7 +61,7 @@ export const useOnboardingState = (): OnboardingStateReturn => {
   }, []);
 
   return {
-    showOnboarding: completed === false,
+    showOnboarding: !IS_REPLAY_MODE && completed === false,
     completeOnboarding,
     resetOnboarding,
   };

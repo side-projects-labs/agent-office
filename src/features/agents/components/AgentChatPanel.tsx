@@ -1,3 +1,4 @@
+import { useObserveOnly } from "@/lib/gateway/observeOnly";
 import {
   memo,
   useCallback,
@@ -956,6 +957,7 @@ const AgentChatComposer = memo(function AgentChatComposer({
   onToolCallingToggle: (enabled: boolean) => void;
   onThinkingTracesToggle: (enabled: boolean) => void;
 }) {
+  const observeOnly = useObserveOnly();
   const stopReason = stopDisabledReason?.trim() ?? "";
   const stopDisabled = !canSend || stopBusy || Boolean(stopReason);
   const stopAriaLabel = stopReason ? `Stop unavailable: ${stopReason}` : "Stop";
@@ -1209,13 +1211,18 @@ const AgentChatComposer = memo(function AgentChatComposer({
             className="chat-composer-input min-h-[64px] flex-1 resize-none border-0 bg-transparent px-0 py-1 text-[15px] leading-6 text-foreground outline-none shadow-none transition placeholder:text-muted-foreground/65 focus:outline-none focus-visible:outline-none focus-visible:ring-0"
             onChange={onChange}
             onKeyDown={onKeyDown}
-            placeholder="type a message"
+            placeholder={
+              observeOnly
+                ? "Observe-only: this office mirrors live Claude Code sessions"
+                : "type a message"
+            }
+            disabled={observeOnly}
           />
           <button
             className="rounded-md border border-border/70 bg-surface-3 px-2.5 py-2 font-mono text-[11px] font-medium tracking-[0.02em] text-white transition hover:bg-surface-2 hover:text-white disabled:cursor-not-allowed disabled:border-border/30 disabled:bg-muted/20 disabled:text-muted-foreground"
             type="button"
             onClick={() => attachmentInputRef.current?.click()}
-            disabled={!canSend}
+            disabled={!canSend || observeOnly}
             aria-label="Attach files"
             title="Attach files"
           >
@@ -1233,7 +1240,7 @@ const AgentChatComposer = memo(function AgentChatComposer({
               } disabled:cursor-not-allowed disabled:border-border/30 disabled:bg-muted/20 disabled:text-muted-foreground`}
               type="button"
               onClick={onVoiceToggle}
-              disabled={voiceDisabled}
+              disabled={voiceDisabled || observeOnly}
               data-testid="agent-voice-toggle"
               aria-label={voiceRecording ? "Stop voice recording" : "Start voice recording"}
               title={voiceRecording ? "Stop voice recording" : "Start voice recording"}
@@ -1261,7 +1268,7 @@ const AgentChatComposer = memo(function AgentChatComposer({
             className="rounded border border-[color:var(--status-approval-border)] bg-[#0e0a04]/90 px-3 py-2 font-mono text-[12px] font-medium tracking-wider text-[color:var(--status-approval-fg)] shadow-lg backdrop-blur transition-colors hover:border-[color:var(--status-approval-border)] hover:text-[color:var(--status-approval-fg)] disabled:cursor-not-allowed disabled:border-border/30 disabled:bg-muted/20 disabled:text-muted-foreground"
             type="button"
             onClick={onSend}
-            disabled={sendDisabled}
+            disabled={sendDisabled || observeOnly}
           >
             Send
           </button>

@@ -180,6 +180,7 @@ function buildHello(state) {
     adapterType: "demo",
     features: {
       methods: METHODS,
+      readOnly: true,
       events: ["chat", "presence", "heartbeat", "agent", "exec.approval.requested", "exec.approval.resolved"],
     },
     snapshot: {
