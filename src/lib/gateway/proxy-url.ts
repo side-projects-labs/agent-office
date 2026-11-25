@@ -2,6 +2,7 @@ const LOOPBACK_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
 
 export const resolveStudioProxyGatewayUrl = (upstreamGatewayUrl?: string): string => {
   const raw = typeof upstreamGatewayUrl === "string" ? upstreamGatewayUrl.trim() : "";
+  if (raw.startsWith("replay://")) return raw;
   if (raw) {
     try {
       const parsed = new URL(raw);

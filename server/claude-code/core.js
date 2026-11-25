@@ -9,7 +9,7 @@
  *     prompt, message, notification_type }
  */
 
-const path = require("path");
+const basename = (p) => String(p).replace(/[\\/]+$/, "").split(/[\\/]/).pop() || "";
 
 const MAX_ARG_CHARS = 200;
 const APPROVAL_TTL_MS = 10 * 60 * 1000;
@@ -80,7 +80,7 @@ function ensureAgent(state, ev) {
   agent = {
     id,
     sessionId,
-    name: path.basename(cwd) || "claude",
+    name: basename(cwd) || "claude",
     role: "Claude Code",
     workspace: cwd,
     runId: null,

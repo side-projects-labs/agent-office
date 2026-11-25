@@ -927,7 +927,10 @@ export const useGatewayConnection = (
       for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
         try {
           await client.connect({
-            gatewayUrl: resolveStudioProxyGatewayUrl(),
+            // agent-office: replay:// bypasses the Studio WebSocket proxy (static deploys).
+            gatewayUrl: gatewayUrl.trim().startsWith("replay://")
+              ? gatewayUrl.trim()
+              : resolveStudioProxyGatewayUrl(),
             token,
             authScopeKey: gatewayUrl,
             clientName: resolveGatewayClientName(selectedAdapterType, gatewayUrl),
