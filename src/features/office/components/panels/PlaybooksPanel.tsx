@@ -16,6 +16,7 @@ import {
 } from "@/lib/cron/types";
 import type { GatewayClient, GatewayStatus } from "@/lib/gateway/GatewayClient";
 import { isGatewayDisconnectLikeError } from "@/lib/gateway/GatewayClient";
+import { tr } from "@/lib/i18n";
 
 type TemplateDefinition = {
   id: string;
@@ -392,10 +393,10 @@ export function PlaybooksPanel({
         <div className="flex items-center justify-between gap-2">
           <div>
             <div className="font-mono text-[11px] uppercase tracking-[0.22em] text-white/70">
-              Playbooks
+              {tr("Playbooks")}
             </div>
             <div className="mt-1 font-mono text-[11px] text-white/40">
-              Launch reusable schedules for the whole headquarters.
+              {tr("Launch reusable schedules for the whole headquarters.")}
             </div>
           </div>
           <button
@@ -404,12 +405,12 @@ export function PlaybooksPanel({
             disabled={!cronEnabled}
             className="rounded border border-cyan-500/20 bg-cyan-500/10 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cyan-200 transition-colors hover:border-cyan-400/40 hover:text-cyan-100"
           >
-            Refresh
+            {tr("Refresh")}
           </button>
         </div>
         {!cronEnabled ? (
           <div className="mt-2 font-mono text-[11px] text-white/35">
-            This runtime does not expose scheduled playbooks.
+            {tr("This runtime does not expose scheduled playbooks.")}
           </div>
         ) : null}
         {error ? <div className="mt-2 font-mono text-[11px] text-rose-300">{error}</div> : null}
@@ -421,13 +422,13 @@ export function PlaybooksPanel({
       <div className="min-h-0 flex-1 overflow-y-auto">
         <div className="border-b border-cyan-500/10 px-4 py-3">
           <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-            Active Jobs
+            {tr("Active Jobs")}
           </div>
           <div className="mt-3 space-y-2">
             {loading ? (
-              <div className="font-mono text-[11px] text-white/40">Loading scheduled jobs.</div>
+              <div className="font-mono text-[11px] text-white/40">{tr("Loading scheduled jobs.")}</div>
             ) : jobs.length === 0 ? (
-              <div className="font-mono text-[11px] text-white/35">No active playbooks yet.</div>
+              <div className="font-mono text-[11px] text-white/35">{tr("No active playbooks yet.")}</div>
             ) : (
               jobs.map((job) => {
                 const agentName = agentById.get(job.agentId ?? "")?.name || job.agentId || "Unknown";
@@ -450,8 +451,8 @@ export function PlaybooksPanel({
 
                     <div className="mt-3 space-y-1 font-mono text-[11px] text-white/65">
                       <div>{formatCronSchedule(job.schedule)}</div>
-                      <div>Next run: {formatRelativeDateTime(job.state.nextRunAtMs)}</div>
-                      <div>Last run: {formatRelativeDateTime(job.state.lastRunAtMs)}</div>
+                      <div>{tr("Next run:")} {formatRelativeDateTime(job.state.nextRunAtMs)}</div>
+                      <div>{tr("Last run:")} {formatRelativeDateTime(job.state.lastRunAtMs)}</div>
                     </div>
 
                     <div className="mt-3 flex gap-2">
@@ -484,10 +485,10 @@ export function PlaybooksPanel({
             <div className="flex items-start justify-between gap-3">
               <div>
                 <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-emerald-200/85">
-                  Automated Standup
+                  {tr("Automated Standup")}
                 </div>
                 <div className="mt-1 font-mono text-[11px] leading-5 text-white/50">
-                  Configure the daily meeting, Jira source, and manual notes board.
+                  {tr("Configure the daily meeting, Jira source, and manual notes board.")}
                 </div>
               </div>
               <button
@@ -495,7 +496,7 @@ export function PlaybooksPanel({
                 onClick={() => void standup.startMeeting("manual")}
                 className="rounded border border-emerald-500/25 bg-emerald-500/10 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-emerald-100 transition-colors hover:border-emerald-400/50 hover:text-white"
               >
-                Start now
+                {tr("Start now")}
               </button>
             </div>
 
@@ -506,12 +507,12 @@ export function PlaybooksPanel({
                   checked={standupScheduleEnabled}
                   onChange={(event) => setStandupScheduleEnabled(event.target.checked)}
                 />
-                Enable scheduled standup.
+                {tr("Enable scheduled standup.")}
               </label>
 
               <label className="flex flex-col gap-1">
                 <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                  Cron expression
+                  {tr("Cron expression")}
                 </span>
                 <input
                   value={standupCronExpr}
@@ -522,7 +523,7 @@ export function PlaybooksPanel({
 
               <label className="flex flex-col gap-1">
                 <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                  Timezone
+                  {tr("Timezone")}
                 </span>
                 <input
                   value={standupTimezone}
@@ -533,7 +534,7 @@ export function PlaybooksPanel({
 
               <label className="flex flex-col gap-1">
                 <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                  Seconds per speaker
+                  {tr("Seconds per speaker")}
                 </span>
                 <input
                   value={standupSpeakerSeconds}
@@ -548,7 +549,7 @@ export function PlaybooksPanel({
                   checked={standupAutoOpenBoard}
                   onChange={(event) => setStandupAutoOpenBoard(event.target.checked)}
                 />
-                Auto-open the standup board when a meeting starts.
+                {tr("Auto-open the standup board when a meeting starts.")}
               </label>
 
               <label className="flex items-center gap-2 font-mono text-[11px] text-white/75">
@@ -557,24 +558,24 @@ export function PlaybooksPanel({
                   checked={jiraEnabled}
                   onChange={(event) => setJiraEnabled(event.target.checked)}
                 />
-                Enable Jira source.
+                {tr("Enable Jira source.")}
               </label>
 
               <label className="flex flex-col gap-1">
                 <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                  Jira base URL
+                  {tr("Jira base URL")}
                 </span>
                 <input
                   value={jiraBaseUrl}
                   onChange={(event) => setJiraBaseUrl(event.target.value)}
-                  placeholder="https://company.atlassian.net"
+                  placeholder={tr("https://company.atlassian.net")}
                   className="rounded border border-white/10 bg-black/50 px-2 py-2 font-mono text-[11px] text-white/80 outline-none placeholder:text-white/20"
                 />
               </label>
 
               <label className="flex flex-col gap-1">
                 <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                  Jira email
+                  {tr("Jira email")}
                 </span>
                 <input
                   value={jiraEmail}
@@ -585,7 +586,7 @@ export function PlaybooksPanel({
 
               <label className="flex flex-col gap-1">
                 <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                  Jira API token
+                  {tr("Jira API token")}
                 </span>
                 <input
                   type="password"
@@ -601,14 +602,14 @@ export function PlaybooksPanel({
                 />
                 {jiraApiTokenConfigured ? (
                   <span className="text-[10px] text-white/45">
-                    A Jira API token is already stored on the Studio host.
+                    {tr("A Jira API token is already stored on the Studio host.")}
                   </span>
                 ) : null}
               </label>
 
               <label className="flex flex-col gap-1">
                 <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                  Jira project key
+                  {tr("Jira project key")}
                 </span>
                 <input
                   value={jiraProjectKey}
@@ -619,7 +620,7 @@ export function PlaybooksPanel({
 
               <label className="flex flex-col gap-1">
                 <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                  Jira JQL override
+                  {tr("Jira JQL override")}
                 </span>
                 <textarea
                   value={jiraJql}
@@ -641,19 +642,19 @@ export function PlaybooksPanel({
 
             <div className="mt-4 border-t border-white/10 pt-4">
               <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                Manual board input
+                {tr("Manual board input")}
               </div>
               <div className="mt-3 grid gap-3">
                 <label className="flex flex-col gap-1">
                   <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                    Agent
+                    {tr("Agent")}
                   </span>
                   <select
                     value={standupAgentId}
                     onChange={(event) => setStandupAgentId(event.target.value)}
                     className="rounded border border-white/10 bg-black/50 px-2 py-2 font-mono text-[11px] text-white/80 outline-none"
                   >
-                    <option value="">Select an agent</option>
+                    <option value="">{tr("Select an agent")}</option>
                     {agents.map((agent) => (
                       <option key={agent.agentId} value={agent.agentId}>
                         {agent.name || agent.agentId}
@@ -664,7 +665,7 @@ export function PlaybooksPanel({
 
                 <label className="flex flex-col gap-1">
                   <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                    Jira assignee hint
+                    {tr("Jira assignee hint")}
                   </span>
                   <input
                     value={manualJiraAssignee}
@@ -675,7 +676,7 @@ export function PlaybooksPanel({
 
                 <label className="flex flex-col gap-1">
                   <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                    Current task
+                    {tr("Current task")}
                   </span>
                   <input
                     value={manualTask}
@@ -686,7 +687,7 @@ export function PlaybooksPanel({
 
                 <label className="flex flex-col gap-1">
                   <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                    Blockers
+                    {tr("Blockers")}
                   </span>
                   <textarea
                     value={manualBlockers}
@@ -698,7 +699,7 @@ export function PlaybooksPanel({
 
                 <label className="flex flex-col gap-1">
                   <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                    Manual note
+                    {tr("Manual note")}
                   </span>
                   <textarea
                     value={manualNote}
@@ -713,24 +714,24 @@ export function PlaybooksPanel({
                   onClick={() => void handleSaveManualNotes()}
                   className="rounded border border-cyan-500/25 bg-cyan-500/10 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-cyan-100 transition-colors hover:border-cyan-400/50 hover:text-white"
                 >
-                  Save manual notes
+                  {tr("Save manual notes")}
                 </button>
               </div>
             </div>
 
             {standup.meeting ? (
               <div className="mt-4 rounded border border-white/8 bg-white/[0.03] px-3 py-3 font-mono text-[11px] text-white/65">
-                <div>Meeting phase: {standup.meeting.phase}</div>
-                <div>Participants: {standup.meeting.participantOrder.length}</div>
+                <div>{tr("Meeting phase:")} {standup.meeting.phase}</div>
+                <div>{tr("Participants:")} {standup.meeting.participantOrder.length}</div>
                 <div>
-                  Current speaker: {standup.meeting.currentSpeakerAgentId ?? "Waiting"}
+                  {tr("Current speaker:")} {standup.meeting.currentSpeakerAgentId ?? "Waiting"}
                 </div>
               </div>
             ) : null}
           </div>
 
           <div className="mt-4 font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-            Templates
+            {tr("Templates")}
           </div>
           <div className="mt-3 space-y-2">
             {PLAYBOOK_TEMPLATES.map((template) => {
@@ -767,14 +768,14 @@ export function PlaybooksPanel({
                     <div className="mt-3 space-y-3 border-t border-cyan-500/10 pt-3">
                       <label className="flex flex-col gap-1">
                         <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                          Agent
+                          {tr("Agent")}
                         </span>
                         <select
                           value={selectedAgentId}
                           onChange={(event) => setSelectedAgentId(event.target.value)}
                           className="rounded border border-white/10 bg-black/50 px-2 py-2 font-mono text-[11px] text-white/80 outline-none"
                         >
-                          <option value="">Select an agent</option>
+                          <option value="">{tr("Select an agent")}</option>
                           {agents.map((agent) => (
                             <option key={agent.agentId} value={agent.agentId}>
                               {agent.name || agent.agentId}
@@ -785,7 +786,7 @@ export function PlaybooksPanel({
 
                       <label className="flex flex-col gap-1">
                         <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                          Name override
+                          {tr("Name override")}
                         </span>
                         <input
                           value={nameOverride}

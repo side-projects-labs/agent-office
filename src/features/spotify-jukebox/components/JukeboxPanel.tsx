@@ -13,6 +13,7 @@ import {
   loadAuthState,
 } from "../auth";
 import type { SpotifyTrack } from "../spotifyApi";
+import { tr } from "@/lib/i18n";
 
 type JukeboxPanelProps = {
   onClose: () => void;
@@ -73,9 +74,9 @@ export function JukeboxPanel({ onClose }: JukeboxPanelProps) {
             <span className="text-2xl">🎵</span>
             <div>
               <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-400/70">
-                Soundclaw
+                {tr("Soundclaw")}
               </div>
-              <h2 className="text-base font-semibold text-white">Office Jukebox</h2>
+              <h2 className="text-base font-semibold text-white">{tr("Office Jukebox")}</h2>
             </div>
           </div>
           <button
@@ -83,7 +84,7 @@ export function JukeboxPanel({ onClose }: JukeboxPanelProps) {
             onClick={onClose}
             className="rounded-full border border-white/10 px-4 py-1.5 text-sm text-slate-400 transition hover:bg-white/5 hover:text-white"
           >
-            Close
+            {tr("Close")}
           </button>
         </div>
 
@@ -132,41 +133,40 @@ function SetupView() {
   return (
     <div className="space-y-6 p-6">
       <div className="rounded-2xl border border-cyan-500/20 bg-cyan-500/5 px-4 py-3 text-sm text-cyan-100">
-        Keep Claw3D open on <code className="rounded bg-slate-900/70 px-1">{localhostOrigin}</code>.
-        Spotify will redirect to your ngrok callback, which sends the auth code back into this window.
+        {tr("Keep Claw3D open on")} <code className="rounded bg-slate-900/70 px-1">{localhostOrigin}</code>{tr(". Spotify will redirect to your ngrok callback, which sends the auth code back into this window.")}
       </div>
 
       {!callbackLooksValid && callbackBaseUrl.trim().length > 0 && (
         <div className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
-          Enter a valid HTTPS ngrok URL, for example <code className="rounded bg-slate-900/70 px-1">https://your-id.ngrok-free.app</code>.
+          {tr("Enter a valid HTTPS ngrok URL, for example")} <code className="rounded bg-slate-900/70 px-1">https://your-id.ngrok-free.app</code>.
         </div>
       )}
 
       {/* What you need card. */}
       <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-5">
         <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-amber-300">
-          <span>⚠️</span> What you need before connecting
+          <span>⚠️</span> {tr("What you need before connecting")}
         </h3>
         <ol className="space-y-3 text-sm text-slate-300">
           <li className="flex gap-2">
             <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-500/20 text-xs font-bold text-amber-300">1</span>
             <span>
-              Go to{" "}
+              {tr("Go to")}{" "}
               <a
                 href="https://developer.spotify.com/dashboard"
                 target="_blank"
                 rel="noreferrer"
                 className="text-cyan-400 underline underline-offset-2 hover:text-cyan-300"
               >
-                developer.spotify.com/dashboard
+                {tr("developer.spotify.com/dashboard")}
               </a>{" "}
-              and create an app (or use an existing one).
+              {tr("and create an app (or use an existing one).")}
             </span>
           </li>
           <li className="flex gap-2">
             <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-500/20 text-xs font-bold text-amber-300">2</span>
             <span>
-              In your Spotify app settings, add this <strong className="text-white">Redirect URI</strong>:
+              {tr("In your Spotify app settings, add this")} <strong className="text-white">{tr("Redirect URI")}</strong>:
             </span>
           </li>
           {redirectUri && (
@@ -179,55 +179,55 @@ function SetupView() {
                 onClick={() => navigator.clipboard.writeText(redirectUri)}
                 className="mt-1.5 text-xs text-slate-500 hover:text-slate-300"
               >
-                Copy to clipboard
+                {tr("Copy to clipboard")}
               </button>
             </li>
           )}
           <li className="flex gap-2">
             <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-500/20 text-xs font-bold text-amber-300">3</span>
-            <span>Paste your public <strong className="text-white">ngrok URL</strong> below, then use the exact redirect shown here in Spotify.</span>
+            <span>{tr("Paste your public")} <strong className="text-white">{tr("ngrok URL")}</strong> {tr("below, then use the exact redirect shown here in Spotify.")}</span>
           </li>
           <li className="flex gap-2">
             <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-500/20 text-xs font-bold text-amber-300">4</span>
-            <span>Keep this local office tab open while authenticating. The popup callback will hand the code back to this page.</span>
+            <span>{tr("Keep this local office tab open while authenticating. The popup callback will hand the code back to this page.")}</span>
           </li>
           <li className="flex gap-2">
             <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-500/20 text-xs font-bold text-amber-300">5</span>
-            <span>Make sure Spotify is open and playing on at least one device before using playback controls.</span>
+            <span>{tr("Make sure Spotify is open and playing on at least one device before using playback controls.")}</span>
           </li>
         </ol>
       </div>
 
       <div className="space-y-2">
         <label className="block text-sm font-medium text-slate-300">
-          ngrok Public URL
+          {tr("ngrok Public URL")}
         </label>
         <input
           type="url"
           value={callbackBaseUrl}
           onChange={(e) => setCallbackBaseUrl(e.target.value)}
-          placeholder="https://your-id.ngrok-free.app"
+          placeholder={tr("https://your-id.ngrok-free.app")}
           className="w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-2.5 font-mono text-sm text-white placeholder-slate-600 focus:border-cyan-500/50 focus:outline-none focus:ring-1 focus:ring-cyan-500/30"
         />
         <p className="text-xs text-slate-500">
-          This is only used for the Spotify OAuth callback bridge. Your app can stay on {localhostOrigin}.
+          {tr("This is only used for the Spotify OAuth callback bridge. Your app can stay on")} {localhostOrigin}.
         </p>
       </div>
 
       {/* Client ID input. */}
       <div className="space-y-2">
         <label className="block text-sm font-medium text-slate-300">
-          Spotify Client ID
+          {tr("Spotify Client ID")}
         </label>
         <input
           type="text"
           value={inputId}
           onChange={(e) => setInputId(e.target.value)}
-          placeholder="e.g. 1a2b3c4d5e6f…"
+          placeholder={tr("e.g. 1a2b3c4d5e6f…")}
           className="w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-2.5 font-mono text-sm text-white placeholder-slate-600 focus:border-cyan-500/50 focus:outline-none focus:ring-1 focus:ring-cyan-500/30"
         />
         <p className="text-xs text-slate-500">
-          Stored locally in your browser. Never sent to any server other than Spotify.
+          {tr("Stored locally in your browser. Never sent to any server other than Spotify.")}
         </p>
       </div>
 
@@ -299,12 +299,12 @@ function PlayerView() {
       {/* Now playing. */}
       <div className="rounded-2xl border border-white/5 bg-slate-900/60 p-4">
         <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-slate-500">
-          Now playing
+          {tr("Now playing")}
         </div>
         {isLoadingPlayer && !track ? (
           <div className="flex items-center gap-3 text-slate-500">
             <RunningAvatarLoader size={16} trackWidth={32} inline />
-            <span className="text-sm">Loading player…</span>
+            <span className="text-sm">{tr("Loading player…")}</span>
           </div>
         ) : track ? (
           <div className="flex items-center gap-4">
@@ -326,19 +326,19 @@ function PlayerView() {
           </div>
         ) : (
           <p className="text-sm text-slate-500">
-            No active playback. Open Spotify on a device first, then hit play.
+            {tr("No active playback. Open Spotify on a device first, then hit play.")}
           </p>
         )}
 
         {/* Transport controls. */}
         <div className="mt-4 flex items-center justify-center gap-4">
-          <ControlButton icon="⏮" onClick={() => void previous()} title="Previous" />
+          <ControlButton icon="⏮" onClick={() => void previous()} title={tr("Previous")} />
           {playerState?.isPlaying ? (
-            <ControlButton icon="⏸" onClick={() => void pause()} title="Pause" large />
+            <ControlButton icon="⏸" onClick={() => void pause()} title={tr("Pause")} large />
           ) : (
-            <ControlButton icon="▶" onClick={() => void resume()} title="Play" large />
+            <ControlButton icon="▶" onClick={() => void resume()} title={tr("Play")} large />
           )}
-          <ControlButton icon="⏭" onClick={() => void next()} title="Next" />
+          <ControlButton icon="⏭" onClick={() => void next()} title={tr("Next")} />
         </div>
 
         {/* Volume. */}
@@ -363,14 +363,14 @@ function PlayerView() {
       {/* Search. */}
       <div>
         <div className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-slate-500">
-          Search tracks
+          {tr("Search tracks")}
         </div>
         <div className="relative">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => handleSearchChange(e.target.value)}
-            placeholder="Artist, song, or album…"
+            placeholder={tr("Artist, song, or album…")}
             className="w-full rounded-xl border border-white/10 bg-slate-900 py-2.5 pl-4 pr-10 text-sm text-white placeholder-slate-600 focus:border-cyan-500/50 focus:outline-none focus:ring-1 focus:ring-cyan-500/30"
           />
           {isSearching && (
@@ -396,7 +396,7 @@ function PlayerView() {
           onClick={disconnect}
           className="text-xs text-slate-600 underline underline-offset-2 hover:text-slate-400"
         >
-          Disconnect Spotify
+          {tr("Disconnect Spotify")}
         </button>
       </div>
     </div>
@@ -457,7 +457,7 @@ function SearchResult({
         onClick={onPlay}
         className="shrink-0 rounded-full border border-cyan-500/30 px-3 py-1 text-xs font-medium text-cyan-400 transition hover:bg-cyan-500/10"
       >
-        Play
+        {tr("Play")}
       </button>
     </li>
   );

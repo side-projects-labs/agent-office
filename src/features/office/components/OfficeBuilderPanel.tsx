@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { OfficePhaserCanvas } from "@/features/office/components/OfficePhaserCanvas";
 import { useOfficeBuilderStore } from "@/features/office/state/useOfficeBuilderStore";
 import type { OfficeMap } from "@/lib/office/schema";
+import { tr } from "@/lib/i18n";
 
 type OfficeBuilderPanelProps = {
   initialMap: OfficeMap;
@@ -77,34 +78,34 @@ export function OfficeBuilderPanel({ initialMap, workspaceId, officeId }: Office
   return (
     <div className="flex h-full w-full gap-3">
       <aside className="ui-panel w-72 shrink-0 overflow-y-auto p-3">
-        <div className="font-mono text-[11px] text-muted-foreground">builder controls</div>
+        <div className="font-mono text-[11px] text-muted-foreground">{tr("builder controls")}</div>
         <div className="mt-3 flex flex-col gap-2">
           <button type="button" className="ui-btn-secondary px-2 py-1 text-left text-xs" onClick={store.undo}>
-            undo
+            {tr("undo")}
           </button>
           <button type="button" className="ui-btn-secondary px-2 py-1 text-left text-xs" onClick={store.redo}>
-            redo
+            {tr("redo")}
           </button>
           <button
             type="button"
             className="ui-btn-secondary px-2 py-1 text-left text-xs"
             onClick={() => store.rotateSelected(90)}
           >
-            rotate selected
+            {tr("rotate selected")}
           </button>
           <button
             type="button"
             className="ui-btn-secondary px-2 py-1 text-left text-xs"
             onClick={() => store.flipSelected("x")}
           >
-            flip selected x
+            {tr("flip selected x")}
           </button>
           <button
             type="button"
             className="ui-btn-secondary px-2 py-1 text-left text-xs"
             onClick={() => store.flipSelected("y")}
           >
-            flip selected y
+            {tr("flip selected y")}
           </button>
           <button
             type="button"
@@ -122,7 +123,7 @@ export function OfficeBuilderPanel({ initialMap, workspaceId, officeId }: Office
               })
             }
           >
-            add light
+            {tr("add light")}
           </button>
           <button
             type="button"
@@ -138,7 +139,7 @@ export function OfficeBuilderPanel({ initialMap, workspaceId, officeId }: Office
               })
             }
           >
-            add emitter
+            {tr("add emitter")}
           </button>
           <button
             type="button"
@@ -153,24 +154,24 @@ export function OfficeBuilderPanel({ initialMap, workspaceId, officeId }: Office
               })
             }
           >
-            add interaction point
+            {tr("add interaction point")}
           </button>
           <button type="button" className="ui-btn-primary px-2 py-1 text-left text-xs" onClick={saveVersion}>
-            save version
+            {tr("save version")}
           </button>
           <button type="button" className="ui-btn-primary px-2 py-1 text-left text-xs" onClick={publishLatest}>
-            publish active
+            {tr("publish active")}
           </button>
         </div>
         <div className="mt-4 border-t border-border/50 pt-3">
-          <div className="font-mono text-[11px] text-muted-foreground">simulation toggles</div>
+          <div className="font-mono text-[11px] text-muted-foreground">{tr("simulation toggles")}</div>
           <div className="mt-2 flex flex-col gap-2 text-xs">
             <label className="flex items-center justify-between">
-              <span>debug</span>
+              <span>{tr("debug")}</span>
               <input type="checkbox" checked={showDebug} onChange={(event) => setShowDebug(event.target.checked)} />
             </label>
             <label className="flex items-center justify-between">
-              <span>lighting</span>
+              <span>{tr("lighting")}</span>
               <input
                 type="checkbox"
                 checked={lightingEnabled}
@@ -178,7 +179,7 @@ export function OfficeBuilderPanel({ initialMap, workspaceId, officeId }: Office
               />
             </label>
             <label className="flex items-center justify-between">
-              <span>ambience</span>
+              <span>{tr("ambience")}</span>
               <input
                 type="checkbox"
                 checked={ambienceEnabled}
@@ -186,7 +187,7 @@ export function OfficeBuilderPanel({ initialMap, workspaceId, officeId }: Office
               />
             </label>
             <label className="flex items-center justify-between">
-              <span>thought bubbles</span>
+              <span>{tr("thought bubbles")}</span>
               <input
                 type="checkbox"
                 checked={thoughtEnabled}
@@ -195,7 +196,7 @@ export function OfficeBuilderPanel({ initialMap, workspaceId, officeId }: Office
             </label>
           </div>
         </div>
-        <div className="mt-4 text-xs text-muted-foreground">selected {selectedIds.length}</div>
+        <div className="mt-4 text-xs text-muted-foreground">{tr("selected")} {selectedIds.length}</div>
         {message ? <div className="mt-2 text-xs text-muted-foreground">{message}</div> : null}
       </aside>
       <div className="ui-panel min-h-0 flex-1 overflow-hidden p-2">

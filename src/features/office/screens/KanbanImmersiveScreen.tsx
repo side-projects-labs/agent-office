@@ -7,6 +7,7 @@ import type { AgentState } from "@/features/agents/state/store";
 import { TaskBoardView } from "@/features/office/tasks/TaskBoardView";
 import type { TaskBoardCard, TaskBoardStatus } from "@/features/office/tasks/types";
 import type { CronJobSummary } from "@/lib/cron/types";
+import { tr } from "@/lib/i18n";
 
 export function KanbanImmersiveScreen({
   agents,
@@ -106,7 +107,7 @@ export function KanbanImmersiveScreen({
         >
           <div className="min-h-0 flex-1">
           <TaskBoardView
-            title="Kanban Board"
+            title={tr("Kanban Board")}
             subtitle="Headquarters task routing, scheduling, and review."
             agents={agents}
             cardsByStatus={cardsByStatus}

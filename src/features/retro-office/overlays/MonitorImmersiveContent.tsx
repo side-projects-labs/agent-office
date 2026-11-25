@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { shouldPreferBrowserScreenshot } from "@/lib/office/browserPreview";
 import type { OfficeDeskMonitor } from "@/lib/office/deskMonitor";
+import { tr } from "@/lib/i18n";
 
 type BrowserPreviewSnapshot = {
   mediaUrl: string | null;
@@ -215,7 +216,7 @@ function MonitorBrowserContent({
               onClick={() => void browserPreview.refresh()}
               className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.18em] text-emerald-200 transition-colors hover:bg-emerald-400/20"
             >
-              Refresh Shot
+              {tr("Refresh Shot")}
             </button>
           ) : null}
           <button
@@ -225,7 +226,7 @@ function MonitorBrowserContent({
             }
             className="rounded-full border border-sky-400/25 bg-sky-400/10 px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.18em] text-sky-200 transition-colors hover:bg-sky-400/20"
           >
-            Open Browser
+            {tr("Open Browser")}
           </button>
         </div>
         <div className="relative flex-1 bg-[#f4f7fb]">
@@ -312,10 +313,10 @@ export function MonitorImmersiveContent({
             <span className="h-3 w-3 rounded-full bg-[#28c840]" />
           </div>
           <div className="text-[12px] font-medium text-white/65">
-            openclaw-control-center
+            {tr("openclaw-control-center")}
           </div>
           <div className="flex items-center gap-2 text-[11px] text-white/40">
-            <span>[v]</span>
+            <span>{tr("[v]")}</span>
             <span>[^]</span>
             <span>[]</span>
           </div>
@@ -330,21 +331,21 @@ export function MonitorImmersiveContent({
           </div>
           <div className="flex w-[240px] flex-col border-r border-white/6 bg-[#1f2024]">
             <div className="border-b border-white/6 px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/45">
-              Openclaw-Control-Center
+              {tr("Openclaw-Control-Center")}
             </div>
             <div className="flex-1 space-y-1 px-3 py-3 font-mono text-[12px]">
-              <div className="px-2 pb-1 text-white/35">src</div>
-              <div className="rounded-md bg-white/6 px-3 py-2 text-white/85">app</div>
-              <div className="rounded-md px-3 py-2 text-white/45">components</div>
-              <div className="rounded-md px-3 py-2 text-white/45">features</div>
+              <div className="px-2 pb-1 text-white/35">{tr("src")}</div>
+              <div className="rounded-md bg-white/6 px-3 py-2 text-white/85">{tr("app")}</div>
+              <div className="rounded-md px-3 py-2 text-white/45">{tr("components")}</div>
+              <div className="rounded-md px-3 py-2 text-white/45">{tr("features")}</div>
               <div className="ml-3 mt-1 space-y-1 border-l border-white/6 pl-3">
-                <div className="rounded-md px-2 py-1 text-white/45">retro-office</div>
+                <div className="rounded-md px-2 py-1 text-white/45">{tr("retro-office")}</div>
                 <div className="rounded-md bg-[#2a2d33] px-2 py-1 text-[#d7dae0]">
                   {editor?.fileName ?? "workbench.tsx"}
                 </div>
               </div>
               <div className="mt-5 px-2 text-[11px] uppercase tracking-[0.2em] text-white/28">
-                Agent
+                {tr("Agent")}
               </div>
               <div className="rounded-md border border-white/6 bg-black/20 px-3 py-2 text-white/82">
                 {monitor.agentName}
@@ -358,7 +359,7 @@ export function MonitorImmersiveContent({
             <div className="flex items-center justify-between border-b border-white/6 bg-[#25262b] px-3">
               <div className="flex items-end gap-1">
                 <div className="border-x border-t border-white/6 bg-[#1f2024] px-4 py-2 font-mono text-[12px] text-white/85">
-                  RetroOffice3D.tsx
+                  {tr("RetroOffice3D.tsx")}
                 </div>
                 <div className="px-3 py-2 font-mono text-[12px] text-white/35">
                   {editor?.fileName ?? "workbench.tsx"}
@@ -397,7 +398,7 @@ export function MonitorImmersiveContent({
                 </div>
                 <div className="h-[28%] border-t border-white/6 bg-[#18191d]">
                   <div className="border-b border-white/6 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-white/32">
-                    Terminal
+                    {tr("Terminal")}
                   </div>
                   <div className="space-y-2 overflow-auto px-4 py-3 font-mono text-[13px] text-[#9cdcfe]">
                     {(
@@ -411,14 +412,14 @@ export function MonitorImmersiveContent({
                       </div>
                     ))}
                     {(editor?.terminalLines ?? []).length === 0 ? (
-                      <div className="text-white/35">No terminal output yet.</div>
+                      <div className="text-white/35">{tr("No terminal output yet.")}</div>
                     ) : null}
                   </div>
                 </div>
               </div>
               <div className="flex w-[290px] flex-col border-l border-white/6 bg-[#1f2024]">
                 <div className="border-b border-white/6 px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/45">
-                  Agent Movement And Behavior
+                  {tr("Agent Movement And Behavior")}
                 </div>
                 <div className="flex-1 space-y-3 overflow-auto px-4 py-4">
                   {monitor.entries.length > 0 ? (
@@ -446,7 +447,7 @@ export function MonitorImmersiveContent({
                     ))
                   ) : (
                     <div className="rounded-lg border border-white/8 bg-white/[0.03] px-3 py-4 text-[12px] text-white/40">
-                      No live activity yet.
+                      {tr("No live activity yet.")}
                     </div>
                   )}
                 </div>
@@ -455,12 +456,12 @@ export function MonitorImmersiveContent({
             <div className="flex items-center justify-between border-t border-white/6 bg-[#0e639c] px-4 py-2 font-mono text-[11px] text-white">
               <div className="flex items-center gap-4">
                 <span>{editor?.language ?? "tsx"}</span>
-                <span>UTF-8</span>
-                <span>Spaces: 2</span>
+                <span>{tr("UTF-8")}</span>
+                <span>{tr("Spaces: 2")}</span>
               </div>
               <div className="flex items-center gap-4 text-white/85">
-                <span>Ln {editor?.cursorLine ?? 1}</span>
-                <span>Col {editor?.cursorColumn ?? 1}</span>
+                <span>{tr("Ln")} {editor?.cursorLine ?? 1}</span>
+                <span>{tr("Col")} {editor?.cursorColumn ?? 1}</span>
               </div>
             </div>
           </div>

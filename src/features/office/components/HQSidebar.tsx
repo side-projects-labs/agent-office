@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { tr } from "@/lib/i18n";
 
 export type HQSidebarTab =
   | "inbox"
@@ -88,7 +89,7 @@ export function HQSidebar({
           aria-label="Open marketplace"
         >
           <span className="block leading-none [writing-mode:vertical-rl]">
-            MARKETPLACE
+            {tr("MARKETPLACE")}
           </span>
         </button>
 
@@ -109,7 +110,7 @@ export function HQSidebar({
           aria-label="Open analytics sidebar"
         >
           <span className="block leading-none [writing-mode:vertical-rl]">
-            ANALYTICS
+            {tr("ANALYTICS")}
           </span>
         </button>
       </div>
@@ -135,7 +136,7 @@ export function HQSidebar({
                 onClick={onAddAgent}
                 className="mt-3 rounded border border-cyan-500/20 bg-cyan-500/10 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cyan-200 transition-colors hover:border-cyan-400/40 hover:text-cyan-100"
               >
-                Add Agent
+                {tr("Add Agent")}
               </button>
             ) : null}
             {!railOnly && onOpenCompanyBuilder ? (
@@ -144,7 +145,7 @@ export function HQSidebar({
                 onClick={onOpenCompanyBuilder}
                 className="mt-2 rounded border border-emerald-500/20 bg-emerald-500/10 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-emerald-200 transition-colors hover:border-emerald-400/40 hover:text-emerald-100"
               >
-                Build Company
+                {tr("Build Company")}
               </button>
             ) : null}
             {railOnly ? (
@@ -153,7 +154,7 @@ export function HQSidebar({
                 onClick={() => onTabChange("inbox")}
                 className="mt-3 rounded border border-cyan-500/20 bg-cyan-500/10 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cyan-200 transition-colors hover:border-cyan-400/40 hover:text-cyan-100"
               >
-                Back To HQ
+                {tr("Back To HQ")}
               </button>
             ) : null}
           </div>

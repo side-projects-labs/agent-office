@@ -9,6 +9,7 @@ import {
   deriveSkillReadinessState,
   resolvePreferredInstallOption,
 } from "@/lib/skills/presentation";
+import { tr } from "@/lib/i18n";
 
 type SkillSetupMessage = { kind: "success" | "error"; message: string };
 
@@ -103,7 +104,7 @@ export const AgentSkillsSetupModal = ({
         <div className="flex items-start justify-between gap-3 px-6 py-5">
           <div className="min-w-0">
             <div className="text-[11px] font-medium tracking-[0.01em] text-muted-foreground/80">
-              System setup
+              {tr("System setup")}
             </div>
             <div className="mt-1 flex flex-wrap items-center gap-2">
               <span className="text-base font-semibold text-foreground">{skill.name}</span>
@@ -114,7 +115,7 @@ export const AgentSkillsSetupModal = ({
               </span>
             </div>
             <div className="mt-2 text-[10px] text-muted-foreground/80">
-              Changes affect all agents on this gateway.
+              {tr("Changes affect all agents on this gateway.")}
             </div>
           </div>
           <button
@@ -122,7 +123,7 @@ export const AgentSkillsSetupModal = ({
             className="sidebar-btn-ghost px-3 font-mono text-[10px] font-semibold tracking-[0.06em]"
             onClick={onClose}
           >
-            Close
+            {tr("Close")}
           </button>
         </div>
         <div className="space-y-3 px-6 pb-3 text-[11px] text-muted-foreground">
@@ -134,7 +135,7 @@ export const AgentSkillsSetupModal = ({
           <div>{skill.description}</div>
           {skill.blockedByAllowlist ? (
             <div className="text-[10px] text-muted-foreground/80">
-              Blocked by bundled skills policy (`skills.allowBundled`).
+              {tr("Blocked by bundled skills policy (`skills.allowBundled`).")}
             </div>
           ) : null}
           {missingDetails.map((line) => (
@@ -224,7 +225,7 @@ export const AgentSkillsSetupModal = ({
                   onClose();
                 }}
               >
-                Remove for all agents
+                {tr("Remove for all agents")}
               </button>
             ) : null}
           </div>

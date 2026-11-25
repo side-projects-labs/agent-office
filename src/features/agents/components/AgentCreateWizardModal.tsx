@@ -22,6 +22,7 @@ import {
 import { useRunnerOptions } from "@/lib/gateway/observeOnly";
 import { t } from "@/lib/uiText";
 import { randomUUID } from "@/lib/uuid";
+import { tr } from "@/lib/i18n";
 
 type AgentCreateWizardModalProps = {
   open: boolean;
@@ -277,13 +278,13 @@ export function AgentCreateWizardModal({
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="font-mono text-[11px] font-semibold tracking-[0.06em] text-muted-foreground">
-                New agent wizard
+                {tr("New agent wizard")}
               </div>
               <div className="mt-1 text-lg font-semibold text-foreground">
-                Create an agent step by step
+                {tr("Create an agent step by step")}
               </div>
               <div className="mt-1 text-sm text-muted-foreground">
-                Start with identity, then build the rest of the profile before finishing.
+                {tr("Start with identity, then build the rest of the profile before finishing.")}
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -295,7 +296,7 @@ export function AgentCreateWizardModal({
                   onClose(createdAgentId);
                 }}
               >
-                Close
+                {tr("Close")}
               </button>
               {activeStepIndex > 0 ? (
                 <button
@@ -309,7 +310,7 @@ export function AgentCreateWizardModal({
                     }
                   }}
                 >
-                  Back
+                  {tr("Back")}
                 </button>
               ) : null}
               <button
@@ -361,9 +362,9 @@ export function AgentCreateWizardModal({
           <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-6 py-6">
             <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col">
               <section className="space-y-3">
-                <h3 className="text-sm font-medium text-foreground">Identity</h3>
+                <h3 className="text-sm font-medium text-foreground">{tr("Identity")}</h3>
                 <div className="text-xs text-muted-foreground">
-                  Confirm the live agent name first, then fill in the rest of `IDENTITY.md`.
+                  {tr("Confirm the live agent name first, then fill in the rest of `IDENTITY.md`.")}
                 </div>
                 <AgentIdentityFields
                   values={draft.identity}
@@ -397,8 +398,7 @@ export function AgentCreateWizardModal({
               </section>
 
               <div className="mt-6 rounded-xl border border-border/45 bg-muted/20 p-4 text-sm text-muted-foreground">
-                Creating the agent in this step makes it available in OpenClaw immediately so the
-                wizard can save the full profile through the gateway in later steps.
+                {tr("Creating the agent in this step makes it available in OpenClaw immediately so the wizard can save the full profile through the gateway in later steps.")}
               </div>
             </div>
           </div>
@@ -421,12 +421,12 @@ export function AgentCreateWizardModal({
               <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-6 py-6">
                 <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 pb-8">
                   <section className="space-y-3">
-                    <h3 className="text-sm font-medium text-foreground">Soul</h3>
+                    <h3 className="text-sm font-medium text-foreground">{tr("Soul")}</h3>
                     <div className="grid gap-4">
                       <WizardTextAreaField
                         label="Core truths"
                         value={draft.soul.coreTruths}
-                        placeholder="e.g. Protect the user's time. Prefer clarity over theatrics."
+                        placeholder={tr("e.g. Protect the user's time. Prefer clarity over theatrics.")}
                         disabled={isWorking}
                         rows={5}
                         onChange={(value) => {
@@ -436,7 +436,7 @@ export function AgentCreateWizardModal({
                       <WizardTextAreaField
                         label="Boundaries"
                         value={draft.soul.boundaries}
-                        placeholder="e.g. Do not bluff. Say when something is uncertain."
+                        placeholder={tr("e.g. Do not bluff. Say when something is uncertain.")}
                         disabled={isWorking}
                         rows={5}
                         onChange={(value) => {
@@ -446,7 +446,7 @@ export function AgentCreateWizardModal({
                       <WizardTextAreaField
                         label="Vibe"
                         value={draft.soul.vibe}
-                        placeholder="e.g. Friendly, direct, and lightly playful."
+                        placeholder={tr("e.g. Friendly, direct, and lightly playful.")}
                         disabled={isWorking}
                         rows={4}
                         onChange={(value) => {
@@ -456,7 +456,7 @@ export function AgentCreateWizardModal({
                       <WizardTextAreaField
                         label="Continuity"
                         value={draft.soul.continuity}
-                        placeholder="e.g. Keep naming, preferences, and previous decisions consistent."
+                        placeholder={tr("e.g. Keep naming, preferences, and previous decisions consistent.")}
                         disabled={isWorking}
                         rows={4}
                         onChange={(value) => {
@@ -471,12 +471,12 @@ export function AgentCreateWizardModal({
               <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-6 py-6">
                 <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 pb-8">
                   <section className="space-y-3">
-                    <h3 className="text-sm font-medium text-foreground">User</h3>
+                    <h3 className="text-sm font-medium text-foreground">{tr("User")}</h3>
                     <div className="grid gap-4 sm:grid-cols-2">
                       <WizardField
                         label="Name"
                         value={draft.user.name}
-                        placeholder="e.g. Luke"
+                        placeholder={tr("e.g. Luke")}
                         disabled={isWorking}
                         onChange={(value) => {
                           updateDraft("user", { ...draft.user, name: value });
@@ -485,7 +485,7 @@ export function AgentCreateWizardModal({
                       <WizardField
                         label="What to call them"
                         value={draft.user.callThem}
-                        placeholder="e.g. Luke"
+                        placeholder={tr("e.g. Luke")}
                         disabled={isWorking}
                         onChange={(value) => {
                           updateDraft("user", { ...draft.user, callThem: value });
@@ -494,7 +494,7 @@ export function AgentCreateWizardModal({
                       <WizardField
                         label="Pronouns"
                         value={draft.user.pronouns}
-                        placeholder="e.g. he/him"
+                        placeholder={tr("e.g. he/him")}
                         disabled={isWorking}
                         onChange={(value) => {
                           updateDraft("user", { ...draft.user, pronouns: value });
@@ -503,7 +503,7 @@ export function AgentCreateWizardModal({
                       <WizardField
                         label="Timezone"
                         value={draft.user.timezone}
-                        placeholder="e.g. America/Chicago"
+                        placeholder={tr("e.g. America/Chicago")}
                         disabled={isWorking}
                         onChange={(value) => {
                           updateDraft("user", { ...draft.user, timezone: value });
@@ -513,7 +513,7 @@ export function AgentCreateWizardModal({
                         <WizardField
                           label="Notes"
                           value={draft.user.notes}
-                          placeholder="e.g. Prefers concise answers and fast iteration."
+                          placeholder={tr("e.g. Prefers concise answers and fast iteration.")}
                           disabled={isWorking}
                           onChange={(value) => {
                             updateDraft("user", { ...draft.user, notes: value });
@@ -524,7 +524,7 @@ export function AgentCreateWizardModal({
                         <WizardTextAreaField
                           label="Context"
                           value={draft.user.context}
-                          placeholder="e.g. Building Claw3D, likes practical UI improvements, and wants direct feedback."
+                          placeholder={tr("e.g. Building Claw3D, likes practical UI improvements, and wants direct feedback.")}
                           disabled={isWorking}
                           rows={7}
                           onChange={(value) => {

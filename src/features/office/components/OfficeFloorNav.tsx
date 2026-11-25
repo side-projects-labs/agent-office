@@ -12,6 +12,7 @@ import {
   type FloorProvider,
 } from "@/lib/office/floors";
 import type { FloorRosterState } from "@/lib/office/floorRoster";
+import { tr } from "@/lib/i18n";
 
 const DIRECTORY_COLLAPSED_STORAGE_KEY = "claw3d.officeFloorNav.directoryCollapsed";
 
@@ -83,10 +84,10 @@ const renderFloorButton = (params: {
         <span>{floor.shortLabel}</span>
         {floor.enabled ? (
           <span>
-            roster {rosterCount} | {rosterStatus}
+            {tr("roster")} {rosterCount} | {rosterStatus}
           </span>
         ) : (
-          <span>Locked</span>
+          <span>{tr("Locked")}</span>
         )}
       </div>
     </button>
@@ -152,7 +153,7 @@ export function OfficeFloorNav({
             directoryCollapsed ? "Expand building directory" : "Collapse building directory"
           }
         >
-          <span>Building Directory</span>
+          <span>{tr("Building Directory")}</span>
           {directoryCollapsed ? (
             <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
           ) : (
@@ -168,7 +169,7 @@ export function OfficeFloorNav({
                 onClick={() => onSelectFloor(getAdjacentEnabledOfficeFloorId(activeFloor.id, -1))}
                 aria-label="Switch to previous enabled floor"
               >
-                Prev
+                {tr("Prev")}
               </button>
               <button
                 type="button"
@@ -176,12 +177,12 @@ export function OfficeFloorNav({
                 onClick={() => onSelectFloor(getAdjacentEnabledOfficeFloorId(activeFloor.id, 1))}
                 aria-label="Switch to next enabled floor"
               >
-                Next
+                {tr("Next")}
               </button>
             </div>
             <div className="mt-3 flex flex-col gap-2">
               <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                Building
+                {tr("Building")}
               </div>
               {buildingFloors.map((floor) =>
                 renderFloorButton({
@@ -195,7 +196,7 @@ export function OfficeFloorNav({
             {outsideFloors.length > 0 ? (
               <div className="mt-4 flex flex-col gap-2">
                 <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                  Outside
+                  {tr("Outside")}
                 </div>
                 {outsideFloors.map((floor) =>
                   renderFloorButton({
@@ -213,13 +214,13 @@ export function OfficeFloorNav({
 
       <section className="pointer-events-auto rounded-2xl border border-white/10 bg-black/68 px-3 py-2 shadow-xl backdrop-blur">
         <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/45">
-          Current Floor
+          {tr("Current Floor")}
         </div>
         <div className="mt-1 text-sm font-semibold text-white">{activeFloor.label}</div>
         <div className="mt-1 flex items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-white/45">
           <span>{PROVIDER_LABEL[activeFloor.provider]}</span>
           <span>
-            roster {activeRoster?.entries.length ?? 0} | {activeRoster?.status ?? "idle"}
+            {tr("roster")} {activeRoster?.entries.length ?? 0} | {activeRoster?.status ?? "idle"}
           </span>
         </div>
       </section>

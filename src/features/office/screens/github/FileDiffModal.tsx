@@ -11,6 +11,7 @@ import {
   type GitHubDiffFile,
 } from "./diff";
 import { maskGitHubRecordingText } from "./utils";
+import { tr } from "@/lib/i18n";
 
 type FileDiffModalProps = {
   file: GitHubDiffFile;
@@ -111,7 +112,7 @@ export function FileDiffModal({
         <div className="flex items-start justify-between gap-4 border-b border-white/8 px-6 py-5">
           <div className="min-w-0">
             <div className="text-[11px] uppercase tracking-[0.24em] text-cyan-100/48">
-              File Diff
+              {tr("File Diff")}
             </div>
             <div className="mt-2 break-all text-lg font-semibold text-white">
               {file.path}
@@ -131,7 +132,7 @@ export function FileDiffModal({
             </div>
             {file.previousPath ? (
               <div className="mt-3 text-sm text-white/54">
-                Renamed from {file.previousPath}
+                {tr("Renamed from")} {file.previousPath}
               </div>
             ) : null}
           </div>
@@ -148,7 +149,7 @@ export function FileDiffModal({
         <div className="min-h-0 flex-1 overflow-auto p-4">
           <div className="overflow-hidden rounded-2xl border border-white/8 bg-[#050b15]">
             <div className="border-b border-white/8 px-4 py-3 text-[11px] uppercase tracking-[0.22em] text-white/40">
-              Patch
+              {tr("Patch")}
             </div>
             {submissionMessage ? (
               <div
@@ -201,13 +202,12 @@ export function FileDiffModal({
                   {selectedLine?.id === line.id ? (
                     <div className="mx-3 my-2 rounded-2xl border border-cyan-300/14 bg-[#0b172c] p-4">
                       <div className="text-[11px] uppercase tracking-[0.18em] text-cyan-100/58">
-                        Comment on {(selectedLine.side ?? "RIGHT").toLowerCase()} side
-                        line {selectedLine.lineNumber}
+                        {tr("Comment on")} {(selectedLine.side ?? "RIGHT").toLowerCase()} {tr("side line")} {selectedLine.lineNumber}
                       </div>
                       <textarea
                         value={commentBody}
                         onChange={(event) => setCommentBody(event.target.value)}
-                        placeholder="Add an inline comment."
+                        placeholder={tr("Add an inline comment.")}
                         className="mt-3 h-28 w-full resize-none rounded-2xl border border-white/8 bg-black/22 px-4 py-3 text-sm text-white outline-none placeholder:text-white/28"
                       />
                       {commentError ? (
@@ -217,7 +217,7 @@ export function FileDiffModal({
                       ) : null}
                       <div className="mt-3 flex items-center justify-between gap-3">
                         <div className="text-[12px] text-white/45">
-                          This posts directly to GitHub on the selected diff line.
+                          {tr("This posts directly to GitHub on the selected diff line.")}
                         </div>
                         <div className="flex items-center gap-2">
                           <button
@@ -229,7 +229,7 @@ export function FileDiffModal({
                             }}
                             className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-2 text-[12px] text-white/68 transition-colors hover:border-white/18 hover:text-white"
                           >
-                            Cancel
+                            {tr("Cancel")}
                           </button>
                           <button
                             type="button"

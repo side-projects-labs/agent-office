@@ -7,6 +7,7 @@ import {
   resolveAgentStatusLabel,
 } from "./colorSemantics";
 import { EmptyStatePanel } from "./EmptyStatePanel";
+import { tr } from "@/lib/i18n";
 
 type FleetSidebarProps = {
   agents: AgentState[];
@@ -75,7 +76,7 @@ export const FleetSidebar = ({
       data-testid="fleet-sidebar"
     >
       <div className="flex items-center justify-between gap-2 px-1">
-        <p className="console-title type-page-title text-foreground">Agents ({agents.length})</p>
+        <p className="console-title type-page-title text-foreground">{tr("Agents (")}{agents.length})</p>
         <button
           type="button"
           data-testid="fleet-new-agent-button"
@@ -108,7 +109,7 @@ export const FleetSidebar = ({
 
       <div ref={scrollContainerRef} className="ui-scroll min-h-0 flex-1 overflow-auto">
         {agents.length === 0 ? (
-          <EmptyStatePanel title="No agents available." compact className="p-3 text-xs" />
+          <EmptyStatePanel title={tr("No agents available.")} compact className="p-3 text-xs" />
         ) : (
           <div className="flex flex-col gap-2.5">
             {agents.map((agent) => {
@@ -159,7 +160,7 @@ export const FleetSidebar = ({
                       </span>
                       {agent.awaitingUserInput ? (
                         <span className={`ui-badge ${NEEDS_APPROVAL_BADGE_CLASS}`} data-status="approval">
-                          Needs approval
+                          {tr("Needs approval")}
                         </span>
                       ) : null}
                     </div>

@@ -8,6 +8,7 @@ import {
   toWorld,
 } from "@/features/retro-office/core/geometry";
 import { InteractiveFurnitureModelProps } from "@/features/retro-office/objects/types";
+import { tr } from "@/lib/i18n";
 
 export function AtmMachineModel({
   item,
@@ -80,7 +81,7 @@ export function AtmMachineModel({
           anchorX="center"
           anchorY="middle"
         >
-          ATM
+          {tr("ATM")}
         </Text>
 
         <group position={[0, 0.6, depthWorld * 0.35]}>
@@ -109,7 +110,7 @@ export function AtmMachineModel({
             anchorX="center"
             anchorY="middle"
           >
-            WELCOME
+            {tr("WELCOME")}
           </Text>
           <Text
             position={[0, 0.06, depthWorld * 0.25 + 0.05]}
@@ -119,7 +120,7 @@ export function AtmMachineModel({
             anchorX="center"
             anchorY="middle"
           >
-            INSERT CARD
+            {tr("INSERT CARD")}
           </Text>
           <mesh
             position={[-widthWorld * 0.42, 0.1, depthWorld * 0.25 + 0.05]}
@@ -262,7 +263,7 @@ export function PhoneBoothModel({
           anchorX="center"
           anchorY="middle"
         >
-          PHONE
+          {tr("PHONE")}
         </Text>
 
         {/* Back Wall */}
@@ -438,7 +439,7 @@ export function SmsBoothModel({
           anchorX="center"
           anchorY="middle"
         >
-          SMS
+          {tr("SMS")}
         </Text>
         <mesh position={[0, 0.8, -depthWorld / 2 + 0.025]} castShadow receiveShadow>
           <boxGeometry args={[widthWorld, 1.5, 0.05]} />
@@ -720,7 +721,7 @@ export function ServerTerminalModel({
           anchorX="center"
           anchorY="middle"
         >
-          GITHUB
+          {tr("GITHUB")}
         </Text>
         <Text
           position={[0, 0.4, depthWorld * 0.45]}
@@ -730,7 +731,7 @@ export function ServerTerminalModel({
           anchorX="center"
           anchorY="middle"
         >
-          REVIEW STATION
+          {tr("REVIEW STATION")}
         </Text>
         <mesh position={[0, 0.11, depthWorld * 0.42]}>
           <boxGeometry args={[widthWorld * 0.66, 0.06, 0.12]} />
@@ -824,7 +825,7 @@ export function QaTerminalModel({
           anchorX="center"
           anchorY="middle"
         >
-          QA LAB
+          {tr("QA LAB")}
         </Text>
         <Text
           position={[0, 0.66, 0]}
@@ -833,7 +834,7 @@ export function QaTerminalModel({
           anchorX="center"
           anchorY="middle"
         >
-          TEST CONSOLE
+          {tr("TEST CONSOLE")}
         </Text>
         <mesh position={[0, 0.16, depthWorld * 0.4]}>
           <boxGeometry args={[widthWorld * 0.78, 0.07, 0.15]} />
@@ -975,7 +976,7 @@ export function DeviceRackModel({
           anchorX="center"
           anchorY="middle"
         >
-          DEVICES
+          {tr("DEVICES")}
         </Text>
       </group>
     </group>
@@ -1077,7 +1078,7 @@ export function TestBenchModel({
           anchorX="center"
           anchorY="middle"
         >
-          TEST BENCH
+          {tr("TEST BENCH")}
         </Text>
       </group>
     </group>

@@ -2,6 +2,7 @@
  * WelcomeStep — First onboarding screen introducing Claw3D.
  */
 import { Building2, Eye, MessageSquare, Users } from "lucide-react";
+import { tr } from "@/lib/i18n";
 
 const features = [
   {
@@ -30,14 +31,11 @@ export const WelcomeStep = () => (
   <div className="space-y-5">
     <div className="space-y-2">
       <p className="text-sm leading-relaxed text-white/80">
-        Claw3D turns your AI automation into a{" "}
-        <span className="font-medium text-white">visual workplace</span> — an
-        office where your AI agents collaborate, code, test, and execute
-        tasks in a shared 3D environment.
+        {tr("Claw3D turns your AI automation into a")}{" "}
+        <span className="font-medium text-white">{tr("visual workplace")}</span> {tr("— an office where your AI agents collaborate, code, test, and execute tasks in a shared 3D environment.")}
       </p>
       <p className="text-sm text-white/60">
-        This wizard will help you connect to your runtime gateway and get
-        started in about two minutes.
+        {tr("This wizard will help you connect to your runtime gateway and get started in about two minutes.")}
       </p>
     </div>
 

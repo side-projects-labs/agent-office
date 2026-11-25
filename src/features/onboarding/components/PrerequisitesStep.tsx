@@ -2,6 +2,7 @@
  * PrerequisitesStep — Tells users what they need before connecting.
  */
 import { CheckCircle2, ExternalLink } from "lucide-react";
+import { tr } from "@/lib/i18n";
 
 const prerequisites = [
   {
@@ -30,8 +31,7 @@ const prerequisites = [
 export const PrerequisitesStep = () => (
   <div className="space-y-2.5">
     <p className="text-[13px] leading-5 text-white/70">
-      Make sure you have these ready before connecting. If you already have
-      OpenClaw running, you can skip this step.
+      {tr("Make sure you have these ready before connecting. If you already have OpenClaw running, you can skip this step.")}
     </p>
 
     <div className="space-y-1.5">
@@ -66,23 +66,23 @@ export const PrerequisitesStep = () => (
     </div>
 
     <p className="text-[10px] leading-4 text-white/40">
-      Need help? Check{" "}
+      {tr("Need help? Check")}{" "}
       <a
         href="https://docs.openclaw.ai"
         target="_blank"
         rel="noopener noreferrer"
         className="text-amber-300/70 hover:text-amber-200"
       >
-        docs.openclaw.ai
+        {tr("docs.openclaw.ai")}
       </a>{" "}
-      or{" "}
+      {tr("or")}{" "}
       <a
         href="https://discord.com/invite/clawd"
         target="_blank"
         rel="noopener noreferrer"
         className="text-amber-300/70 hover:text-amber-200"
       >
-        join Discord
+        {tr("join Discord")}
       </a>
       .
     </p>

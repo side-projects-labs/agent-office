@@ -210,6 +210,7 @@ import {
 import { deriveSkillReadinessState } from "@/lib/skills/presentation";
 import type { StandupAgentSnapshot } from "@/lib/office/standup/types";
 import type { SkillStatusEntry } from "@/lib/skills/types";
+import { tr } from "@/lib/i18n";
 
 const stringToColor = (str: string) => {
   let hash = 0;
@@ -4967,7 +4968,7 @@ export function OfficeScreen({
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-amber-200/80">
-                  Office fleet status
+                  {tr("Office fleet status")}
                 </p>
                 <p className="mt-1 text-sm text-amber-50">{emptyFleetMessage}</p>
               </div>
@@ -4979,7 +4980,7 @@ export function OfficeScreen({
                     handleOpenCreateAgentWizard();
                   }}
                 >
-                  Add Agent
+                  {tr("Add Agent")}
                 </button>
                 <button
                   type="button"
@@ -4988,7 +4989,7 @@ export function OfficeScreen({
                     handleOpenCompanyBuilder();
                   }}
                 >
-                  Build Company
+                  {tr("Build Company")}
                 </button>
                 <button
                   type="button"
@@ -4997,7 +4998,7 @@ export function OfficeScreen({
                     void loadAgents({ forceSettings: true });
                   }}
                 >
-                  Retry
+                  {tr("Retry")}
                 </button>
               </div>
             </div>
@@ -5009,7 +5010,7 @@ export function OfficeScreen({
         <div className="pointer-events-none fixed left-1/2 top-5 z-40 -translate-x-1/2 px-4">
           <div className="pointer-events-auto rounded-lg border border-red-400/30 bg-black/85 px-4 py-3 shadow-2xl backdrop-blur">
             <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-red-200/75">
-              Fleet mutation
+              {tr("Fleet mutation")}
             </div>
             <div className="mt-1 text-sm text-red-50">{deleteAgentStatusLine}</div>
           </div>
@@ -5156,10 +5157,10 @@ export function OfficeScreen({
       {showOpenClawConsole ? (
         <section className="pointer-events-auto fixed bottom-3 left-3 z-30 flex w-[520px] max-w-[calc(100vw-1.5rem)] flex-col overflow-hidden rounded border border-cyan-500/25 bg-black/78 shadow-2xl backdrop-blur">
           <div className="flex items-center justify-between border-b border-cyan-500/15 px-3 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-cyan-200/80">
-            <span>Agent Event Console</span>
+            <span>{tr("Agent Event Console")}</span>
             <div className="flex items-center gap-2">
               <span className="text-[10px] text-cyan-100/45">
-                agents {state.agents.length} | events{" "}
+                {tr("agents")} {state.agents.length} {tr("| events")}{" "}
                 {filteredOpenClawLogEntries.length}/{openClawLogEntries.length}
               </span>
               <button
@@ -5180,14 +5181,14 @@ export function OfficeScreen({
                 onClick={handleDownloadOpenClawConsoleJson}
                 className="rounded border border-cyan-500/20 px-2 py-0.5 text-[9px] text-cyan-100/70 transition-colors hover:border-cyan-400/45 hover:text-cyan-50"
               >
-                Download JSON
+                {tr("Download JSON")}
               </button>
               <button
                 type="button"
                 onClick={handleClearOpenClawConsole}
                 className="rounded border border-cyan-500/20 px-2 py-0.5 text-[9px] text-cyan-100/70 transition-colors hover:border-cyan-400/45 hover:text-cyan-50"
               >
-                Clear
+                {tr("Clear")}
               </button>
               <button
                 type="button"
@@ -5210,7 +5211,7 @@ export function OfficeScreen({
                   onChange={(event) =>
                     setOpenClawConsoleSearch(event.target.value)
                   }
-                  placeholder="Search logs, payloads, thinking, user text."
+                  placeholder={tr("Search logs, payloads, thinking, user text.")}
                   className="min-w-0 flex-1 rounded border border-cyan-500/20 bg-black/35 px-2 py-1 text-[10px] normal-case tracking-normal text-cyan-50 placeholder:text-cyan-100/30 focus:border-cyan-400/40 focus:outline-none"
                 />
                 {openClawConsoleSearch ? (
@@ -5219,7 +5220,7 @@ export function OfficeScreen({
                     onClick={() => setOpenClawConsoleSearch("")}
                     className="rounded border border-cyan-500/20 px-2 py-1 text-[9px] uppercase tracking-[0.16em] text-cyan-100/70 transition-colors hover:border-cyan-400/45 hover:text-cyan-50"
                   >
-                    Reset
+                    {tr("Reset")}
                   </button>
                 ) : null}
               </div>
@@ -5227,7 +5228,7 @@ export function OfficeScreen({
             {openClawLiveStateMatchesSearch ? (
               <div className="rounded border border-cyan-500/10 bg-cyan-950/10 p-2">
                 <div className="mb-1 text-[9px] uppercase tracking-[0.16em] text-cyan-300/70">
-                  Live OpenClaw State
+                  {tr("Live OpenClaw State")}
                 </div>
                 <pre className="whitespace-pre-wrap break-words text-cyan-100/80">
                   {renderOpenClawHighlightedText(
@@ -5238,11 +5239,11 @@ export function OfficeScreen({
               </div>
             ) : (
               <div className="rounded border border-cyan-500/10 bg-cyan-950/10 p-2 text-cyan-100/45">
-                Live OpenClaw state does not match the current search.
+                {tr("Live OpenClaw state does not match the current search.")}
               </div>
             )}
             <div className="text-[9px] uppercase tracking-[0.16em] text-cyan-300/70">
-              Raw OpenClaw Gateway Events
+              {tr("Raw OpenClaw Gateway Events")}
             </div>
             {filteredOpenClawLogEntries.length === 0 ? (
               <div className="rounded border border-cyan-500/10 bg-cyan-950/10 p-2 text-cyan-100/45">
@@ -5296,7 +5297,7 @@ export function OfficeScreen({
                     {entry.messageText ? (
                       <div className="mt-2 rounded border border-amber-400/20 bg-amber-950/25 px-2 py-1 text-amber-100">
                         <div className="text-[9px] uppercase tracking-[0.16em] text-amber-300/75">
-                          User / Message Text
+                          {tr("User / Message Text")}
                         </div>
                         <div className="mt-1 whitespace-pre-wrap break-words">
                           {renderOpenClawHighlightedText(
@@ -5309,7 +5310,7 @@ export function OfficeScreen({
                     {entry.thinkingText ? (
                       <div className="mt-2 rounded border border-fuchsia-400/15 bg-fuchsia-950/15 px-2 py-1 text-fuchsia-100/90">
                         <div className="text-[9px] uppercase tracking-[0.16em] text-fuchsia-300/70">
-                          Thinking
+                          {tr("Thinking")}
                         </div>
                         <div className="mt-1 whitespace-pre-wrap break-words">
                           {renderOpenClawHighlightedText(
@@ -5322,7 +5323,7 @@ export function OfficeScreen({
                     {entry.streamText ? (
                       <div className="mt-2 rounded border border-cyan-400/15 bg-cyan-950/18 px-2 py-1 text-cyan-50/90">
                         <div className="text-[9px] uppercase tracking-[0.16em] text-cyan-300/70">
-                          Stream
+                          {tr("Stream")}
                         </div>
                         <div className="mt-1 whitespace-pre-wrap break-words">
                           {renderOpenClawHighlightedText(
@@ -5335,7 +5336,7 @@ export function OfficeScreen({
                     {entry.toolText ? (
                       <div className="mt-2 rounded border border-violet-400/15 bg-violet-950/15 px-2 py-1 text-violet-100/90">
                         <div className="text-[9px] uppercase tracking-[0.16em] text-violet-300/70">
-                          Tool Output
+                          {tr("Tool Output")}
                         </div>
                         <div className="mt-1 whitespace-pre-wrap break-words">
                           {renderOpenClawHighlightedText(
@@ -5347,7 +5348,7 @@ export function OfficeScreen({
                     ) : null}
                     <details className="mt-2">
                       <summary className="cursor-pointer text-[9px] uppercase tracking-[0.16em] text-cyan-300/55">
-                        Raw Payload
+                        {tr("Raw Payload")}
                       </summary>
                       <pre className="mt-1 whitespace-pre-wrap break-words text-cyan-100/45">
                         {renderOpenClawHighlightedText(
@@ -5389,7 +5390,7 @@ export function OfficeScreen({
                 {!chatRosterCollapsed ? (
                   <>
                     <span className="font-mono text-[11px] font-semibold uppercase tracking-widest text-white/60">
-                      Agents
+                      {tr("Agents")}
                     </span>
                     <span className="font-mono text-[10px] text-white/40">
                       {chatRosterEntries.length}
@@ -5438,7 +5439,7 @@ export function OfficeScreen({
                   </div>
                 ) : chatRosterEntries.length === 0 ? (
                   <div className="px-3 py-4 font-mono text-[11px] text-white/30">
-                    No agents.
+                    {tr("No agents.")}
                   </div>
                 ) : (
                   chatRosterEntries.map((agent) => {
@@ -5463,7 +5464,7 @@ export function OfficeScreen({
                         </span>
                         {agent.kind === "remote" ? (
                           <span className="shrink-0 font-mono text-[9px] uppercase tracking-[0.14em] text-cyan-300/60">
-                            Remote
+                            {tr("Remote")}
                           </span>
                         ) : null}
                         <span className="sr-only">
@@ -5598,7 +5599,7 @@ export function OfficeScreen({
                 />
               ) : (
                 <div className="flex flex-1 items-center justify-center font-mono text-[12px] text-white/30">
-                  Select an agent to chat.
+                  {tr("Select an agent to chat.")}
                 </div>
               )}
             </div>
@@ -5613,12 +5614,12 @@ export function OfficeScreen({
           {chatOpen ? (
             <>
               <ChevronDown className="h-3.5 w-3.5" />
-              <span>HIDE CHAT</span>
+              <span>{tr("HIDE CHAT")}</span>
             </>
           ) : (
             <>
               <MessageSquare className="h-3.5 w-3.5" />
-              <span>CHAT</span>
+              <span>{tr("CHAT")}</span>
               {runningCount > 0 ? (
                 <span className="rounded bg-amber-500/20 px-1 text-[10px] text-amber-400">
                   {runningCount}
@@ -5651,7 +5652,7 @@ export function OfficeScreen({
             </div>
             <div className="flex flex-col">
               <span className="text-[10px] uppercase tracking-[0.18em] text-white/55">
-                Main agent
+                {tr("Main agent")}
               </span>
               <span className="text-[12px] font-medium text-white">
                 {mainVoiceError
@@ -5673,12 +5674,12 @@ export function OfficeScreen({
 
       {debugEnabled ? (
         <section className="fixed bottom-3 right-3 z-50 max-h-[45vh] w-[560px] overflow-auto rounded border border-slate-700 bg-black/90 p-3 font-mono text-[11px] text-slate-100">
-          <div className="mb-2 font-semibold text-cyan-300">office debug</div>
+          <div className="mb-2 font-semibold text-cyan-300">{tr("office debug")}</div>
           <div className="mb-2 text-slate-400">
-            status: {status} | agents: {state.agents.length}
+            {tr("status:")} {status} {tr("| agents:")} {state.agents.length}
           </div>
           {debugRows.length === 0 ? (
-            <div className="text-slate-500">No debug data yet.</div>
+            <div className="text-slate-500">{tr("No debug data yet.")}</div>
           ) : (
             <div className="space-y-2">
               {debugRows.map((row) => (
@@ -5690,26 +5691,26 @@ export function OfficeScreen({
                     {row.name} ({row.agentId})
                   </div>
                   <div>
-                    storeStatus={row.storeStatus} runId={row.runId ?? "null"}{" "}
-                    inferredRunning=
+                    {tr("storeStatus=")}{row.storeStatus} {tr("runId=")}{row.runId ?? "null"}{" "}
+                    {tr("inferredRunning=")}
                     {String(row.inferredRunning)}
                   </div>
                   <div>
-                    lastRole={row.lastRole} messages={row.messageCount}
+                    {tr("lastRole=")}{row.lastRole} {tr("messages=")}{row.messageCount}
                   </div>
                   <div className="truncate text-slate-400">
-                    detectedSession={row.detectedSessionKey || "-"}
+                    {tr("detectedSession=")}{row.detectedSessionKey || "-"}
                   </div>
                   <div className="truncate text-slate-400">
-                    lastText={row.lastText || "-"}
+                    {tr("lastText=")}{row.lastText || "-"}
                   </div>
                   <div className="truncate text-slate-500">
-                    sessions={row.inspectedSessions || "-"}
+                    {tr("sessions=")}{row.inspectedSessions || "-"}
                   </div>
                   <div className="text-slate-500">
-                    source={row.inferenceSource}
+                    {tr("source=")}{row.inferenceSource}
                   </div>
-                  <div className="text-slate-500">at={row.at}</div>
+                  <div className="text-slate-500">{tr("at=")}{row.at}</div>
                 </div>
               ))}
             </div>

@@ -16,6 +16,7 @@ import {
 } from "@/lib/avatars/profile";
 import { AgentAvatarPreview3D } from "@/features/agents/components/AgentAvatarPreview3D";
 import { randomUUID } from "@/lib/uuid";
+import { tr } from "@/lib/i18n";
 
 export type AgentAvatarEditorPanelProps = {
   agentId: string;
@@ -97,11 +98,11 @@ export const AgentAvatarEditorPanel = forwardRef<
     <div className="grid h-full min-h-0 gap-0 xl:grid-cols-[360px_minmax(0,1fr)]">
       <div className="border-b border-border/45 p-5 xl:border-b-0 xl:border-r">
         <div className="font-mono text-[11px] font-semibold tracking-[0.06em] text-muted-foreground">
-          Avatar creator
+          {tr("Avatar creator")}
         </div>
         <div className="mt-1 text-lg font-semibold text-foreground">{agentName}</div>
         <div className="mt-1 text-xs text-muted-foreground">
-          Personalize this office avatar locally on this machine.
+          {tr("Personalize this office avatar locally on this machine.")}
         </div>
         <div className="mt-4 overflow-hidden rounded-xl border border-border/45 bg-[#070b16]">
           <AgentAvatarPreview3D profile={draft} className="h-[360px] w-full" />
@@ -114,7 +115,7 @@ export const AgentAvatarEditorPanel = forwardRef<
             disabled={saving}
           >
             <RefreshCcw className="h-3.5 w-3.5" />
-            Reset
+            {tr("Reset")}
           </button>
           <button
             type="button"
@@ -123,7 +124,7 @@ export const AgentAvatarEditorPanel = forwardRef<
             disabled={saving}
           >
             <Shuffle className="h-3.5 w-3.5" />
-            Randomize
+            {tr("Randomize")}
           </button>
         </div>
       </div>
@@ -154,7 +155,7 @@ export const AgentAvatarEditorPanel = forwardRef<
         <div className="grid gap-6 xl:grid-cols-2">
           <section className="space-y-3">
             <h3 className="font-mono text-[11px] font-semibold tracking-[0.06em] text-muted-foreground">
-              Skin tone
+              {tr("Skin tone")}
             </h3>
             <div className="flex flex-wrap gap-2">
               {AGENT_AVATAR_SKIN_TONE_OPTIONS.map((option) => {
@@ -180,7 +181,7 @@ export const AgentAvatarEditorPanel = forwardRef<
 
           <section className="space-y-3">
             <h3 className="font-mono text-[11px] font-semibold tracking-[0.06em] text-muted-foreground">
-              Hair style
+              {tr("Hair style")}
             </h3>
             <div className="flex flex-wrap gap-2">
               {AGENT_AVATAR_HAIR_STYLE_OPTIONS.map((option) => {
@@ -210,7 +211,7 @@ export const AgentAvatarEditorPanel = forwardRef<
 
           <section className="space-y-3">
             <h3 className="font-mono text-[11px] font-semibold tracking-[0.06em] text-muted-foreground">
-              Hair color
+              {tr("Hair color")}
             </h3>
             <div className="flex flex-wrap gap-2">
               {AGENT_AVATAR_HAIR_COLOR_OPTIONS.map((option) => {
@@ -236,7 +237,7 @@ export const AgentAvatarEditorPanel = forwardRef<
 
           <section className="space-y-3">
             <h3 className="font-mono text-[11px] font-semibold tracking-[0.06em] text-muted-foreground">
-              Top style
+              {tr("Top style")}
             </h3>
             <div className="flex flex-wrap gap-2">
               {AGENT_AVATAR_TOP_STYLE_OPTIONS.map((option) => {
@@ -266,7 +267,7 @@ export const AgentAvatarEditorPanel = forwardRef<
 
           <section className="space-y-3">
             <h3 className="font-mono text-[11px] font-semibold tracking-[0.06em] text-muted-foreground">
-              Top color
+              {tr("Top color")}
             </h3>
             <div className="flex flex-wrap gap-2">
               {AGENT_AVATAR_CLOTHING_COLOR_OPTIONS.map((option) => {
@@ -292,7 +293,7 @@ export const AgentAvatarEditorPanel = forwardRef<
 
           <section className="space-y-3">
             <h3 className="font-mono text-[11px] font-semibold tracking-[0.06em] text-muted-foreground">
-              Bottom style
+              {tr("Bottom style")}
             </h3>
             <div className="flex flex-wrap gap-2">
               {AGENT_AVATAR_BOTTOM_STYLE_OPTIONS.map((option) => {
@@ -322,7 +323,7 @@ export const AgentAvatarEditorPanel = forwardRef<
 
           <section className="space-y-3">
             <h3 className="font-mono text-[11px] font-semibold tracking-[0.06em] text-muted-foreground">
-              Bottom color
+              {tr("Bottom color")}
             </h3>
             <div className="flex flex-wrap gap-2">
               {AGENT_AVATAR_CLOTHING_COLOR_OPTIONS.map((option) => {
@@ -348,7 +349,7 @@ export const AgentAvatarEditorPanel = forwardRef<
 
           <section className="space-y-3">
             <h3 className="font-mono text-[11px] font-semibold tracking-[0.06em] text-muted-foreground">
-              Shoe color
+              {tr("Shoe color")}
             </h3>
             <div className="flex flex-wrap gap-2">
               {AGENT_AVATAR_SHOE_COLOR_OPTIONS.map((option) => {
@@ -374,7 +375,7 @@ export const AgentAvatarEditorPanel = forwardRef<
 
           <section className="space-y-3">
             <h3 className="font-mono text-[11px] font-semibold tracking-[0.06em] text-muted-foreground">
-              Hat
+              {tr("Hat")}
             </h3>
             <div className="flex flex-wrap gap-2">
               {AGENT_AVATAR_HAT_STYLE_OPTIONS.map((option) => {
@@ -404,7 +405,7 @@ export const AgentAvatarEditorPanel = forwardRef<
 
           <section className="space-y-3 xl:col-span-2">
             <h3 className="font-mono text-[11px] font-semibold tracking-[0.06em] text-muted-foreground">
-              Accessories
+              {tr("Accessories")}
             </h3>
             <div className="flex flex-wrap gap-2">
               {[

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-require-imports -- plain CommonJS test double */
 // Test double for `claude -p --output-format stream-json`.
 // Logs argv/env to FAKE_CLAUDE_LOG and prints a canned stream.
 const fs = require("fs");

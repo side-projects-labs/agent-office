@@ -36,6 +36,7 @@ import {
   maskGitHubRecordingText,
   summarizeChecksTone,
 } from "./github/utils";
+import { tr } from "@/lib/i18n";
 
 type GithubImmersiveScreenProps = {
   agentName?: string | null;
@@ -343,10 +344,10 @@ export function GithubImmersiveScreen({
             <Github className="h-6 w-6" />
             <div>
               <div className="text-[11px] uppercase tracking-[0.28em] text-cyan-200/70">
-                Code Review Room
+                {tr("Code Review Room")}
               </div>
               <div className="text-xl font-semibold">
-                GitHub skill setup required.
+                {tr("GitHub skill setup required.")}
               </div>
             </div>
           </div>
@@ -368,9 +369,7 @@ export function GithubImmersiveScreen({
                   : "The GitHub skill still needs setup."}
             </div>
             <p className="mt-3 text-sm leading-6 text-cyan-100/72">
-              Open the Skills panel to install or enable the bundled GitHub
-              skill so agents can walk here and review pull requests through
-              OpenClaw.
+              {tr("Open the Skills panel to install or enable the bundled GitHub skill so agents can walk here and review pull requests through OpenClaw.")}
             </p>
             <div className="mt-5 space-y-2">
               {skillMissingDetails.length > 0 ? (
@@ -384,8 +383,7 @@ export function GithubImmersiveScreen({
                 ))
               ) : (
                 <div className="rounded-2xl border border-white/6 bg-black/20 px-4 py-3 text-sm text-white/72">
-                  Enable the GitHub skill for the selected agent, then come back
-                  to the code review room.
+                  {tr("Enable the GitHub skill for the selected agent, then come back to the code review room.")}
                 </div>
               )}
             </div>
@@ -396,7 +394,7 @@ export function GithubImmersiveScreen({
                 className="mt-6 inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-300/10 px-5 py-2.5 text-sm font-medium text-cyan-100 transition-colors hover:border-cyan-200/50 hover:bg-cyan-300/18"
               >
                 <ShieldCheck className="h-4 w-4" />
-                Open Skills Setup
+                {tr("Open Skills Setup")}
               </button>
             ) : null}
           </div>
@@ -415,7 +413,7 @@ export function GithubImmersiveScreen({
             </div>
             <div>
               <div className="text-[11px] uppercase tracking-[0.28em] text-cyan-200/65">
-                Code Review Room
+                {tr("Code Review Room")}
               </div>
               <div className="text-lg font-semibold text-white">
                 {agentName
@@ -438,7 +436,7 @@ export function GithubImmersiveScreen({
               ) : (
                 <RefreshCw className="h-3.5 w-3.5" />
               )}
-              Refresh
+              {tr("Refresh")}
             </button>
             {dashboard?.viewerLogin ? (
               <div className="rounded-full border border-cyan-300/16 bg-cyan-300/8 px-3 py-1.5 text-[12px] text-cyan-100/90">
@@ -470,13 +468,13 @@ export function GithubImmersiveScreen({
           <div className="flex max-w-md flex-col items-center rounded-3xl border border-cyan-300/12 bg-[#081122]/78 px-8 py-10 text-center shadow-[0_20px_80px_rgba(0,0,0,0.38)]">
             <RunningAvatarLoader size={40} trackWidth={104} />
             <div className="mt-5 text-[11px] uppercase tracking-[0.28em] text-cyan-100/55">
-              Loading GitHub
+              {tr("Loading GitHub")}
             </div>
             <div className="mt-2 text-lg font-semibold text-white">
-              Fetching your review queue.
+              {tr("Fetching your review queue.")}
             </div>
             <div className="mt-2 text-sm text-white/58">
-              Pull requests, repo metadata, and review details are loading now.
+              {tr("Pull requests, repo metadata, and review details are loading now.")}
             </div>
           </div>
         </div>
@@ -494,7 +492,7 @@ export function GithubImmersiveScreen({
                 }`}
               >
                 <div className="text-[11px] uppercase tracking-[0.24em] text-white/50">
-                  My Queue
+                  {tr("My Queue")}
                 </div>
                 <div className="mt-1 text-lg font-semibold leading-none">
                   {queueEntries.length}
@@ -510,7 +508,7 @@ export function GithubImmersiveScreen({
                 }`}
               >
                 <div className="text-[11px] uppercase tracking-[0.24em] text-white/50">
-                  Current Repo
+                  {tr("Current Repo")}
                 </div>
                 <div className="mt-1 break-words text-sm font-medium leading-5 text-white/85">
                   {currentRepoLabel}
@@ -521,7 +519,7 @@ export function GithubImmersiveScreen({
             <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4">
               {loading ? (
                 <div className="rounded-2xl border border-white/6 bg-white/4 px-4 py-4 text-sm text-white/55">
-                  Loading pull requests.
+                  {tr("Loading pull requests.")}
                 </div>
               ) : activeList.length === 0 ? (
                 <div className="rounded-2xl border border-white/6 bg-white/4 px-4 py-4 text-sm text-white/55">
@@ -557,7 +555,7 @@ export function GithubImmersiveScreen({
                           </div>
                           {entry.isDraft ? (
                             <span className="rounded-full border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-white/55">
-                              Draft
+                              {tr("Draft")}
                             </span>
                           ) : null}
                         </div>
@@ -585,7 +583,7 @@ export function GithubImmersiveScreen({
           <div className="min-h-0 overflow-hidden">
             {detailLoading ? (
               <div className="flex h-full items-center justify-center text-sm text-white/55">
-                Loading pull request details.
+                {tr("Loading pull request details.")}
               </div>
             ) : detail ? (
               <div className="grid h-full grid-cols-[minmax(0,1fr)_320px]">
@@ -616,14 +614,14 @@ export function GithubImmersiveScreen({
                       className="inline-flex min-w-[96px] shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full border border-white/10 bg-white/5 px-3 py-2 text-[12px] text-white/75 transition-colors hover:border-white/20 hover:text-white"
                     >
                       <ExternalLink className="h-3.5 w-3.5" />
-                      Open PR
+                      {tr("Open PR")}
                     </a>
                   </div>
 
                   <div className="mt-5 grid gap-4 md:grid-cols-3">
                     <div className="rounded-2xl border border-white/6 bg-white/4 px-4 py-4">
                       <div className="text-[11px] uppercase tracking-[0.24em] text-white/45">
-                        Checks
+                        {tr("Checks")}
                       </div>
                       <div className="mt-2 text-lg font-semibold text-white">
                         {detail.statusChecks.length}
@@ -631,7 +629,7 @@ export function GithubImmersiveScreen({
                     </div>
                     <div className="rounded-2xl border border-white/6 bg-white/4 px-4 py-4">
                       <div className="text-[11px] uppercase tracking-[0.24em] text-white/45">
-                        Files Changed
+                        {tr("Files Changed")}
                       </div>
                       <div className="mt-2 text-lg font-semibold text-white">
                         {detail.files.length}
@@ -639,7 +637,7 @@ export function GithubImmersiveScreen({
                     </div>
                     <div className="rounded-2xl border border-white/6 bg-white/4 px-4 py-4">
                       <div className="text-[11px] uppercase tracking-[0.24em] text-white/45">
-                        Reviews
+                        {tr("Reviews")}
                       </div>
                       <div className="mt-2 text-lg font-semibold text-white">
                         {detail.reviews.length}
@@ -651,10 +649,10 @@ export function GithubImmersiveScreen({
                     <div className="space-y-4">
                       <div>
                         <div className="text-[11px] uppercase tracking-[0.24em] text-cyan-100/52">
-                          Review Actions
+                          {tr("Review Actions")}
                         </div>
                         <div className="mt-1 text-sm text-white/68">
-                          Submit the review directly from the server room.
+                          {tr("Submit the review directly from the server room.")}
                         </div>
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
@@ -695,7 +693,7 @@ export function GithubImmersiveScreen({
                     <textarea
                       value={reviewBody}
                       onChange={(event) => setReviewBody(event.target.value)}
-                      placeholder="Add an approval note or request changes summary."
+                      placeholder={tr("Add an approval note or request changes summary.")}
                       className="mt-4 h-28 w-full resize-none rounded-2xl border border-white/8 bg-black/22 px-4 py-3 text-sm text-white outline-none placeholder:text-white/28"
                     />
                   </div>
@@ -710,7 +708,7 @@ export function GithubImmersiveScreen({
                           : "border border-white/6 bg-white/4 text-white/58 hover:text-white"
                       }`}
                     >
-                      Summary
+                      {tr("Summary")}
                     </button>
                     <button
                       type="button"
@@ -721,7 +719,7 @@ export function GithubImmersiveScreen({
                           : "border border-white/6 bg-white/4 text-white/58 hover:text-white"
                       }`}
                     >
-                      Browser Preview
+                      {tr("Browser Preview")}
                     </button>
                   </div>
 
@@ -729,7 +727,7 @@ export function GithubImmersiveScreen({
                     <>
                       <div className="mt-5 rounded-3xl border border-white/6 bg-white/4 p-5">
                         <div className="text-[11px] uppercase tracking-[0.24em] text-white/45">
-                          Description
+                          {tr("Description")}
                         </div>
                         <div className="mt-3 whitespace-pre-wrap text-sm leading-6 text-white/78">
                           {maskGitHubRecordingText(detail.body) ||
@@ -739,10 +737,10 @@ export function GithubImmersiveScreen({
 
                       <div className="mt-5 rounded-3xl border border-white/6 bg-white/4 p-5">
                         <div className="text-[11px] uppercase tracking-[0.24em] text-white/45">
-                          Diff Preview
+                          {tr("Diff Preview")}
                         </div>
                         <div className="mt-1 text-sm text-white/72">
-                          Full pull request diff preview.
+                          {tr("Full pull request diff preview.")}
                         </div>
                         <pre className="mt-3 max-h-[320px] overflow-auto rounded-2xl border border-white/6 bg-black/28 p-4 text-[12px] leading-5 text-cyan-100/86">
                           {maskGitHubRecordingText(detail.diff) ||
@@ -750,7 +748,7 @@ export function GithubImmersiveScreen({
                         </pre>
                         {detail.diffTruncated ? (
                           <div className="mt-2 text-[11px] text-white/45">
-                            Diff preview truncated for performance.
+                            {tr("Diff preview truncated for performance.")}
                           </div>
                         ) : null}
                       </div>
@@ -758,16 +756,15 @@ export function GithubImmersiveScreen({
                   ) : (
                     <div className="mt-5 rounded-3xl border border-white/6 bg-white/4 p-5">
                       <div className="mb-3 text-[11px] uppercase tracking-[0.24em] text-white/45">
-                        Browser Preview
+                        {tr("Browser Preview")}
                       </div>
                       {GITHUB_RECORDING_PRIVACY_MASK_ACTIVE ? (
                         <div className="rounded-2xl border border-white/6 bg-black/20 px-4 py-5 text-sm text-white/55">
-                          Browser preview is temporarily disabled so the screen
-                          recording does not reveal the real GitHub username.
+                          {tr("Browser preview is temporarily disabled so the screen recording does not reveal the real GitHub username.")}
                         </div>
                       ) : browserPreview.loading ? (
                         <div className="rounded-2xl border border-white/6 bg-black/20 px-4 py-5 text-sm text-white/55">
-                          Capturing GitHub preview.
+                          {tr("Capturing GitHub preview.")}
                         </div>
                       ) : browserPreview.mediaUrl ? (
                         <Image
@@ -790,7 +787,7 @@ export function GithubImmersiveScreen({
 
                 <div className="min-h-0 overflow-y-auto border-l border-white/6 bg-[#060d19]/86 px-4 py-5">
                   <div className="text-[11px] uppercase tracking-[0.24em] text-white/42">
-                    Checks
+                    {tr("Checks")}
                   </div>
                   <div className="mt-3 space-y-2">
                     {detail.statusChecks.length > 0 ? (
@@ -811,13 +808,13 @@ export function GithubImmersiveScreen({
                       ))
                     ) : (
                       <div className="rounded-2xl border border-white/6 bg-white/4 px-3 py-3 text-sm text-white/55">
-                        No checks reported.
+                        {tr("No checks reported.")}
                       </div>
                     )}
                   </div>
 
                   <div className="mt-6 text-[11px] uppercase tracking-[0.24em] text-white/42">
-                    Files
+                    {tr("Files")}
                   </div>
                   <div className="mt-3 space-y-2">
                     {detail.files.slice(0, 12).map((file) => (
@@ -847,7 +844,7 @@ export function GithubImmersiveScreen({
                   </div>
 
                   <div className="mt-6 text-[11px] uppercase tracking-[0.24em] text-white/42">
-                    Recent Reviews
+                    {tr("Recent Reviews")}
                   </div>
                   <div className="mt-3 space-y-2">
                     {detail.reviews.slice(0, 6).length > 0 ? (
@@ -874,7 +871,7 @@ export function GithubImmersiveScreen({
                       ))
                     ) : (
                       <div className="rounded-2xl border border-white/6 bg-white/4 px-3 py-3 text-sm text-white/55">
-                        No reviews yet.
+                        {tr("No reviews yet.")}
                       </div>
                     )}
                   </div>
@@ -882,8 +879,7 @@ export function GithubImmersiveScreen({
               </div>
             ) : (
               <div className="flex h-full items-center justify-center px-8 text-center text-sm text-white/55">
-                Select a pull request to inspect its checks, diff, and review
-                actions.
+                {tr("Select a pull request to inspect its checks, diff, and review actions.")}
               </div>
             )}
           </div>

@@ -12,6 +12,7 @@ import {
   formatNumber,
   toDateInputValue,
 } from "@/lib/office/usageAnalyticsPresentation";
+import { tr } from "@/lib/i18n";
 
 const PIN_STORAGE_KEY = "openclaw_atm_pin_code";
 
@@ -177,7 +178,7 @@ export function AtmImmersiveScreen(props: OfficeUsageAnalyticsParams) {
               onClick={() => handleKeyPad("clear")}
               className="flex h-16 w-24 items-center justify-center rounded-xl border border-rose-500/20 bg-[#1a0505]/60 text-[14px] font-medium uppercase tracking-wider text-rose-200 transition-all hover:bg-rose-900/40 active:scale-95"
             >
-              Clear
+              {tr("Clear")}
             </button>
             <button
               onClick={() => handleKeyPad("0")}
@@ -206,25 +207,25 @@ export function AtmImmersiveScreen(props: OfficeUsageAnalyticsParams) {
           <div>
             <div className="flex items-center gap-3 text-[12px] uppercase tracking-[0.32em] text-[#83fff0]/70">
               <Landmark className="h-4 w-4" />
-              OpenClaw Treasury ATM
+              {tr("OpenClaw Treasury ATM")}
             </div>
             <div className="mt-3 text-[13px] uppercase tracking-[0.24em] text-[#7ddfd2]/62">
-              Token Usage Ledger
+              {tr("Token Usage Ledger")}
             </div>
             <div className="mt-2 text-[44px] font-semibold tracking-[0.08em] text-[#dbfff6]">
               {formatNumber(usage.totals.totalTokens)}
             </div>
             <div className="mt-2 text-[15px] uppercase tracking-[0.28em] text-[#89fff1]/72">
-              Total tokens used
+              {tr("Total tokens used")}
             </div>
             <div className="mt-4 inline-flex items-center rounded-full border border-[#7cffef]/20 bg-black/20 px-4 py-2 text-[13px] uppercase tracking-[0.24em] text-[#bafff7]/85">
-              USD equivalent {formatCurrency(usage.totals.totalCost)}
+              {tr("USD equivalent")} {formatCurrency(usage.totals.totalCost)}
             </div>
           </div>
           <div className="w-[320px] rounded-[24px] border border-[#7dfff0]/18 bg-black/22 p-5 shadow-[0_18px_50px_rgba(0,0,0,0.34)]">
             <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.24em] text-[#88fff1]/62">
               <Wallet className="h-4 w-4" />
-              Account summary
+              {tr("Account summary")}
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
               {[
@@ -264,7 +265,7 @@ export function AtmImmersiveScreen(props: OfficeUsageAnalyticsParams) {
 
         <div className="mt-7 space-y-6">
           <SectionCard
-            title="Usage Overview"
+            title={tr("Usage Overview")}
             subtitle="Expanded OpenClaw expense data for the selected ledger window."
             action={
               <button
@@ -277,7 +278,7 @@ export function AtmImmersiveScreen(props: OfficeUsageAnalyticsParams) {
                 ) : (
                   <RefreshCw className="h-3.5 w-3.5" />
                 )}
-                Refresh
+                {tr("Refresh")}
               </button>
             }
           >
@@ -290,7 +291,7 @@ export function AtmImmersiveScreen(props: OfficeUsageAnalyticsParams) {
           </SectionCard>
 
           <SectionCard
-            title="Daily Withdrawals"
+            title={tr("Daily Withdrawals")}
             subtitle="Recent cost movement across the last seven days."
           >
             {usage.loading && recentCostDaily.length === 0 ? (
@@ -325,7 +326,7 @@ export function AtmImmersiveScreen(props: OfficeUsageAnalyticsParams) {
 
           <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
             <SectionCard
-              title="Activity By Day"
+              title={tr("Activity By Day")}
               subtitle="Daily tokens, cost, messages, tool calls, and errors."
             >
               <div className="space-y-3">
@@ -344,7 +345,7 @@ export function AtmImmersiveScreen(props: OfficeUsageAnalyticsParams) {
             </SectionCard>
 
             <SectionCard
-              title="Budget Alerts"
+              title={tr("Budget Alerts")}
               subtitle="Threshold warnings for daily, monthly, and per-agent spend."
             >
               <div className="space-y-3">
@@ -376,7 +377,7 @@ export function AtmImmersiveScreen(props: OfficeUsageAnalyticsParams) {
           </div>
 
           <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-            <SectionCard title="Agent Expenses" subtitle="All agents ranked by total spend.">
+            <SectionCard title={tr("Agent Expenses")} subtitle="All agents ranked by total spend.">
               <div className="space-y-3">
                 {usage.aggregates.byAgent.map((entry, index) => (
                   <ListRow
@@ -393,7 +394,7 @@ export function AtmImmersiveScreen(props: OfficeUsageAnalyticsParams) {
             </SectionCard>
 
             <SectionCard
-              title="Model Expenses"
+              title={tr("Model Expenses")}
               subtitle="Provider and model spend breakdown."
             >
               <div className="space-y-3">
@@ -413,7 +414,7 @@ export function AtmImmersiveScreen(props: OfficeUsageAnalyticsParams) {
           </div>
 
           <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-            <SectionCard title="Tool Usage" subtitle="All tools observed in the selected sessions.">
+            <SectionCard title={tr("Tool Usage")} subtitle="All tools observed in the selected sessions.">
               <div className="space-y-3">
                 {usage.aggregates.tools.tools.map((tool, index) => (
                   <ListRow
@@ -430,7 +431,7 @@ export function AtmImmersiveScreen(props: OfficeUsageAnalyticsParams) {
             </SectionCard>
 
             <SectionCard
-              title="Message Totals"
+              title={tr("Message Totals")}
               subtitle="Conversation activity across all selected sessions."
             >
               <div className="grid grid-cols-2 gap-3">
@@ -455,7 +456,7 @@ export function AtmImmersiveScreen(props: OfficeUsageAnalyticsParams) {
           </div>
 
           <SectionCard
-            title="Recent Sessions"
+            title={tr("Recent Sessions")}
             subtitle="Latest sessions with cost and token totals."
           >
             <div className="space-y-3">

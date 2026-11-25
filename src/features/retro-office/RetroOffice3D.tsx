@@ -222,6 +222,7 @@ import {
   TrailSystem as AgentTrailSystem,
 } from "@/features/retro-office/systems/visualSystems";
 import type { OfficeCleaningCue } from "@/lib/office/janitorReset";
+import { tr } from "@/lib/i18n";
 
 type OfficeDeskMonitorMap = Record<string, OfficeDeskMonitor>;
 type RenderAgentUiSnapshot = Pick<RenderAgent, "state" | "status">;
@@ -5878,7 +5879,7 @@ export function RetroOffice3D({
               className="rounded-xl border border-emerald-500/20 bg-[#0b1410]/90 px-3 py-2 text-left shadow-lg backdrop-blur-sm transition-colors hover:border-emerald-400/35 hover:bg-[#102017]/95"
             >
               <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-emerald-200/80">
-                Standup
+                {tr("Standup")}
               </div>
               <div className="mt-1 text-[11px] font-semibold text-white/90">
                 {standupMeeting.phase === "gathering"
@@ -5889,7 +5890,7 @@ export function RetroOffice3D({
               </div>
               <div className="mt-1 font-mono text-[10px] text-white/50">
                 {standupMeeting.arrivedAgentIds.length}/
-                {standupMeeting.participantOrder.length} arrived
+                {standupMeeting.participantOrder.length} {tr("arrived")}
               </div>
             </button>
           ) : null}
@@ -5900,7 +5901,7 @@ export function RetroOffice3D({
               className="rounded-xl border border-cyan-500/22 bg-[#09111a]/90 px-3 py-2 text-left shadow-lg backdrop-blur-sm transition-colors hover:border-cyan-300/40 hover:bg-[#0d1b28]/95"
             >
               <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-cyan-200/80">
-                Kanban board
+                {tr("Kanban board")}
               </div>
             </button>
           ) : null}
@@ -5993,7 +5994,7 @@ export function RetroOffice3D({
             >
               <Users className="h-3.5 w-3.5" />
               <span>{agents.length}</span>
-              <span className="hidden sm:inline">agents</span>
+              <span className="hidden sm:inline">{tr("agents")}</span>
             </button>
           </div>
 
@@ -6002,10 +6003,10 @@ export function RetroOffice3D({
               <div className="mb-3 flex items-center justify-between gap-3">
                 <div>
                   <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-amber-500/70">
-                    Team roster
+                    {tr("Team roster")}
                   </div>
                   <div className="mt-1 text-sm font-semibold text-amber-100">
-                    Compact view for larger fleets.
+                    {tr("Compact view for larger fleets.")}
                   </div>
                 </div>
                 <button
@@ -6116,7 +6117,7 @@ export function RetroOffice3D({
                       {onAgentDelete && !isRemoteAgent ? (
                         <button
                           type="button"
-                          title="Delete agent"
+                          title={tr("Delete agent")}
                           onClick={() => {
                             onAgentDelete(agent.id);
                             setAgentRosterOpen(false);
@@ -6176,7 +6177,7 @@ export function RetroOffice3D({
                     if (mins <= 0) return null;
                     return (
                       <div className="text-[9px] text-amber-700/70">
-                        last active {mins}m ago
+                        {tr("last active")} {mins}{tr("m ago")}
                       </div>
                     );
                   })()}
@@ -6256,7 +6257,7 @@ export function RetroOffice3D({
                   setContextMenu(null);
                 }}
               >
-                Copy ID
+                {tr("Copy ID")}
               </button>
             </div>
           );
@@ -6270,7 +6271,7 @@ export function RetroOffice3D({
           >
             <div className="flex items-center justify-between">
               <div className="text-[10px] font-bold uppercase tracking-[0.22em] text-amber-500/70">
-                Desk actions
+                {tr("Desk actions")}
               </div>
               <button
                 type="button"
@@ -6280,13 +6281,13 @@ export function RetroOffice3D({
                 }}
                 className="rounded border border-amber-900/25 px-2 py-0.5 text-[10px] text-amber-200/70 transition-colors hover:border-amber-600/40 hover:text-amber-100"
               >
-                Close
+                {tr("Close")}
               </button>
             </div>
             <div className="mt-2 rounded-md border border-amber-900/20 bg-[#1a120b] px-2.5 py-2 text-[11px] text-amber-100/90">
               {selectedDeskActionAssignedAgent ? (
                 <>
-                  Assigned agent:{" "}
+                  {tr("Assigned agent:")}{" "}
                   <span className="font-semibold text-white">
                     {selectedDeskActionAssignedAgent.name}
                   </span>
@@ -6303,7 +6304,7 @@ export function RetroOffice3D({
                 disabled={!selectedDeskActionAssignedAgentId}
                 className="rounded-md border border-emerald-700/35 bg-emerald-900/20 px-2 py-2 text-[11px] font-semibold text-emerald-100 transition-colors hover:bg-emerald-800/30 disabled:cursor-not-allowed disabled:opacity-45"
               >
-                Go to desk
+                {tr("Go to desk")}
               </button>
               <button
                 type="button"
@@ -6311,7 +6312,7 @@ export function RetroOffice3D({
                 disabled={!onDeskAssignmentChange}
                 className="rounded-md border border-amber-700/35 bg-amber-900/18 px-2 py-2 text-[11px] font-semibold text-amber-100 transition-colors hover:bg-amber-800/30 disabled:cursor-not-allowed disabled:opacity-45"
               >
-                Assign agent
+                {tr("Assign agent")}
               </button>
             </div>
             {deskAssignPickerOpen && onDeskAssignmentChange ? (
@@ -6327,7 +6328,7 @@ export function RetroOffice3D({
                   }}
                   className="w-full rounded-md border border-amber-800/25 bg-[#1c1610] px-2 py-2 text-[11px] text-amber-100 outline-none transition-colors focus:border-amber-500/50"
                 >
-                  <option value="">Unassigned desk.</option>
+                  <option value="">{tr("Unassigned desk.")}</option>
                   {agents.map((agent) => (
                     <option key={agent.id} value={agent.id}>
                       {agent.name}
@@ -6352,7 +6353,7 @@ export function RetroOffice3D({
                 {followed?.name ?? "Agent"}
               </span>
               <span className="text-[9px] text-amber-600/60">
-                · click 📷 to exit
+                {tr("· click 📷 to exit")}
               </span>
             </div>
           );
@@ -6363,7 +6364,7 @@ export function RetroOffice3D({
       !githubCommandArrived ? (
         <div className="pointer-events-none absolute top-16 left-1/2 z-20 -translate-x-1/2">
           <div className="rounded-full border border-cyan-300/18 bg-[#06101f]/88 px-4 py-2 text-[11px] uppercase tracking-[0.22em] text-cyan-100/78 backdrop-blur-sm">
-            Agent walking to the Code Review room.
+            {tr("Agent walking to the Code Review room.")}
           </div>
         </div>
       ) : null}
@@ -6371,7 +6372,7 @@ export function RetroOffice3D({
       {!immersiveOverlayActive && qaTestingAgentId && !qaCommandArrived ? (
         <div className="pointer-events-none absolute top-28 left-1/2 z-20 -translate-x-1/2">
           <div className="rounded-full border border-violet-300/20 bg-[#12091d]/88 px-4 py-2 text-[11px] uppercase tracking-[0.22em] text-violet-100/80 backdrop-blur-sm">
-            Agent walking to the QA Lab.
+            {tr("Agent walking to the QA Lab.")}
           </div>
         </div>
       ) : null}
@@ -6404,14 +6405,14 @@ export function RetroOffice3D({
           <div className="pointer-events-auto absolute right-[7vw] top-[7vh] flex items-center gap-3 rounded-full border border-white/10 bg-black/60 px-4 py-2 backdrop-blur-sm">
             <div className="h-2 w-2 rounded-full bg-emerald-400" />
             <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-emerald-200/90">
-              Monitor View
+              {tr("Monitor View")}
             </div>
             <button
               type="button"
               onClick={() => onMonitorSelect?.(null)}
               className="rounded-full border border-white/10 px-3 py-1 text-[11px] text-white/70 transition-colors hover:border-white/20 hover:text-white"
             >
-              Exit
+              {tr("Exit")}
             </button>
           </div>
         </div>
@@ -6481,7 +6482,7 @@ export function RetroOffice3D({
               aria-label="Close GitHub view"
               className="flex h-10 w-10 items-center justify-center rounded-full border border-cyan-300/20 bg-[#05111f]/82 text-[18px] leading-none text-cyan-100/78 backdrop-blur-sm transition-colors hover:border-cyan-200/40 hover:text-white"
             >
-              X
+              {tr("X")}
             </button>
           </div>
         </div>
@@ -6504,24 +6505,24 @@ export function RetroOffice3D({
               <div className="sticky top-0 z-10 flex items-center justify-between border-b border-violet-300/10 bg-[#0d0718]/95 px-8 py-5 backdrop-blur-sm">
                 <div>
                   <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-violet-200/72">
-                    QA Lab
+                    {tr("QA Lab")}
                   </div>
                   <div className="mt-2 text-2xl font-semibold text-white/94">
-                    Testing Console
+                    {tr("Testing Console")}
                   </div>
                 </div>
                 <div className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-emerald-200/88">
-                  Verifying Build
+                  {tr("Verifying Build")}
                 </div>
               </div>
               <div className="grid flex-1 grid-cols-[1.4fr_1fr] gap-6 px-8 py-6">
                 <div className="rounded-[22px] border border-violet-300/12 bg-black/26 p-5">
                   <div className="mb-4 flex items-center justify-between">
                     <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-violet-200/70">
-                      Active Workflow
+                      {tr("Active Workflow")}
                     </div>
                     <div className="text-[11px] uppercase tracking-[0.22em] text-cyan-200/70">
-                      QA Ready
+                      {tr("QA Ready")}
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-3 text-sm">
@@ -6544,10 +6545,10 @@ export function RetroOffice3D({
                   <div className="mt-5 rounded-[20px] border border-violet-300/12 bg-[#120d22]/88 p-4">
                     <div className="flex items-center justify-between">
                       <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-violet-200/70">
-                        Pipeline Health
+                        {tr("Pipeline Health")}
                       </div>
                       <div className="text-[11px] uppercase tracking-[0.22em] text-emerald-200/82">
-                        Stable
+                        {tr("Stable")}
                       </div>
                     </div>
                     <div className="mt-4 space-y-3">
@@ -6585,7 +6586,7 @@ export function RetroOffice3D({
                   </div>
                   <div className="mt-5 rounded-[20px] border border-cyan-300/12 bg-[#07111d]/86 p-4">
                     <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-cyan-200/72">
-                      Assigned Agent
+                      {tr("Assigned Agent")}
                     </div>
                     <div className="mt-2 text-lg font-semibold text-cyan-50">
                       {qaTestingAgentId
@@ -6594,15 +6595,14 @@ export function RetroOffice3D({
                         : "QA Operator"}
                     </div>
                     <div className="mt-2 text-sm leading-6 text-cyan-50/72">
-                      Running validation passes across the lab monitors and
-                      connected test devices.
+                      {tr("Running validation passes across the lab monitors and connected test devices.")}
                     </div>
                   </div>
                 </div>
                 <div className="flex flex-col gap-4">
                   <div className="rounded-[22px] border border-violet-300/12 bg-black/26 p-5">
                     <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-violet-200/70">
-                      Device Wall
+                      {tr("Device Wall")}
                     </div>
                     <div className="mt-4 space-y-3">
                       {[
@@ -6634,7 +6634,7 @@ export function RetroOffice3D({
                   </div>
                   <div className="rounded-[22px] border border-cyan-300/12 bg-[#07111d]/88 p-5">
                     <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-cyan-200/72">
-                      Live Findings
+                      {tr("Live Findings")}
                     </div>
                     <div className="mt-4 space-y-3 text-sm">
                       {[
@@ -6653,14 +6653,14 @@ export function RetroOffice3D({
                   </div>
                   <div className="rounded-[22px] border border-amber-300/12 bg-[#161007]/88 p-5">
                     <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-amber-200/72">
-                      Suggested Prompts
+                      {tr("Suggested Prompts")}
                     </div>
                     <div className="mt-4 space-y-2 text-sm text-amber-50/78">
-                      <div>`write tests`</div>
-                      <div>`run tests`</div>
-                      <div>`verify`</div>
-                      <div>`reproduce`</div>
-                      <div>`check if this works`</div>
+                      <div>{tr("`write tests`")}</div>
+                      <div>{tr("`run tests`")}</div>
+                      <div>{tr("`verify`")}</div>
+                      <div>{tr("`reproduce`")}</div>
+                      <div>{tr("`check if this works`")}</div>
                     </div>
                   </div>
                 </div>
@@ -6681,7 +6681,7 @@ export function RetroOffice3D({
               aria-label="Close QA lab view"
               className="flex h-10 w-10 items-center justify-center rounded-full border border-violet-300/20 bg-[#12091d]/82 text-[18px] leading-none text-violet-100/78 backdrop-blur-sm transition-colors hover:border-violet-200/40 hover:text-white"
             >
-              X
+              {tr("X")}
             </button>
           </div>
         </div>
@@ -6723,7 +6723,7 @@ export function RetroOffice3D({
               aria-label="Close messaging booth view"
               className="flex h-10 w-10 items-center justify-center rounded-full border border-sky-200/20 bg-[#03111f]/82 text-[18px] leading-none text-sky-50/78 backdrop-blur-sm transition-colors hover:border-sky-200/40 hover:text-white"
             >
-              X
+              {tr("X")}
             </button>
           </div>
         </div>
@@ -6762,7 +6762,7 @@ export function RetroOffice3D({
               aria-label="Close phone booth view"
               className="flex h-10 w-10 items-center justify-center rounded-full border border-sky-200/20 bg-[#03111f]/82 text-[18px] leading-none text-sky-50/78 backdrop-blur-sm transition-colors hover:border-sky-200/40 hover:text-white"
             >
-              X
+              {tr("X")}
             </button>
           </div>
         </div>
@@ -6790,7 +6790,7 @@ export function RetroOffice3D({
               aria-label="Close ATM view"
               className="flex h-10 w-10 items-center justify-center rounded-full border border-[#8efff2]/20 bg-[#031214]/82 text-[18px] leading-none text-[#d7fff9]/78 backdrop-blur-sm transition-colors hover:border-[#8efff2]/40 hover:text-white"
             >
-              X
+              {tr("X")}
             </button>
           </div>
         </div>
@@ -6799,7 +6799,7 @@ export function RetroOffice3D({
       {/* Edit mode badge. */}
       {!immersiveOverlayActive && editMode && (
         <div className="absolute top-3 left-3 px-3 py-1 rounded-md bg-amber-500/90 text-[#1a1008] text-xs font-bold uppercase tracking-widest pointer-events-none z-10">
-          Edit Mode
+          {tr("Edit Mode")}
         </div>
       )}
 
@@ -6808,7 +6808,7 @@ export function RetroOffice3D({
           <div className="mb-3 flex items-start justify-between gap-3">
             <div>
               <div className="text-[10px] font-bold uppercase tracking-[0.22em] text-amber-500/65">
-                Selected
+                {tr("Selected")}
               </div>
               <div className="mt-1 text-xs font-semibold text-amber-100">
                 {PALETTE.find((entry) => entry.type === selectedItem.type)
@@ -6816,13 +6816,13 @@ export function RetroOffice3D({
                   resolveItemTypeKey(selectedItem).replaceAll("_", " ")}
               </div>
               <div className="mt-1 text-[10px] text-amber-500/55">
-                rot {Math.round(selectedItem.facing ?? 0)} deg · lift{" "}
+                {tr("rot")} {Math.round(selectedItem.facing ?? 0)} {tr("deg · lift")}{" "}
                 {(selectedItem.elevation ?? 0).toFixed(2)}
               </div>
             </div>
             <button
               onClick={closeSelectedEditor}
-              title="Close object editor"
+              title={tr("Close object editor")}
               className="flex h-7 w-7 items-center justify-center rounded-md border border-amber-800/25 bg-[#1c1610] text-amber-300/80 transition-colors hover:bg-[#261e16] hover:text-amber-200"
             >
               <X size={12} />
@@ -6830,7 +6830,7 @@ export function RetroOffice3D({
           </div>
           <div className="mb-3">
             <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.22em] text-amber-500/65">
-              Move
+              {tr("Move")}
             </div>
             <div className="grid grid-cols-3 gap-1.5">
               <div />
@@ -6838,33 +6838,33 @@ export function RetroOffice3D({
                 onClick={() => moveSelectedItem(0, -SNAP_GRID)}
                 className="rounded-md border border-amber-800/25 bg-[#1c1610] px-2 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-amber-200/85 hover:bg-[#261e16]"
               >
-                Forward
+                {tr("Forward")}
               </button>
               <div />
               <button
                 onClick={() => moveSelectedItem(-SNAP_GRID, 0)}
                 className="rounded-md border border-amber-800/25 bg-[#1c1610] px-2 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-amber-200/85 hover:bg-[#261e16]"
               >
-                Left
+                {tr("Left")}
               </button>
               <button
                 onClick={() => moveSelectedItem(0, 0, ELEVATION_STEP)}
                 className="rounded-md border border-amber-800/25 bg-[#1c1610] px-2 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-amber-200/85 hover:bg-[#261e16]"
               >
-                Up
+                {tr("Up")}
               </button>
               <button
                 onClick={() => moveSelectedItem(SNAP_GRID, 0)}
                 className="rounded-md border border-amber-800/25 bg-[#1c1610] px-2 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-amber-200/85 hover:bg-[#261e16]"
               >
-                Right
+                {tr("Right")}
               </button>
               <div />
               <button
                 onClick={() => moveSelectedItem(0, SNAP_GRID)}
                 className="rounded-md border border-amber-800/25 bg-[#1c1610] px-2 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-amber-200/85 hover:bg-[#261e16]"
               >
-                Back
+                {tr("Back")}
               </button>
               <div />
               <div />
@@ -6872,38 +6872,37 @@ export function RetroOffice3D({
                 onClick={() => moveSelectedItem(0, 0, -ELEVATION_STEP)}
                 className="rounded-md border border-amber-800/25 bg-[#1c1610] px-2 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-amber-200/85 hover:bg-[#261e16]"
               >
-                Down
+                {tr("Down")}
               </button>
               <div />
             </div>
           </div>
           <div>
             <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.22em] text-amber-500/65">
-              Rotate
+              {tr("Rotate")}
             </div>
             <div className="grid grid-cols-2 gap-1.5">
               <button
                 onClick={() => rotateSelectedItem(-ROTATION_STEP_DEG)}
                 className="rounded-md border border-amber-800/25 bg-[#1c1610] px-2 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-amber-200/85 hover:bg-[#261e16]"
               >
-                -15 deg
+                {tr("-15 deg")}
               </button>
               <button
                 onClick={() => rotateSelectedItem(ROTATION_STEP_DEG)}
                 className="rounded-md border border-amber-800/25 bg-[#1c1610] px-2 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-amber-200/85 hover:bg-[#261e16]"
               >
-                +15 deg
+                {tr("+15 deg")}
               </button>
             </div>
             <div className="mt-2 text-[10px] text-amber-500/50">
-              Arrows move on the floor. PageUp and PageDown lift. [ and ]
-              rotate.
+              {tr("Arrows move on the floor. PageUp and PageDown lift. [ and ] rotate.")}
             </div>
           </div>
           {selectedItem.type === "desk_cubicle" ? (
             <div className="mt-3 border-t border-amber-900/20 pt-3">
               <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.22em] text-amber-500/65">
-                Desk Assignment
+                {tr("Desk Assignment")}
               </div>
               <select
                 value={selectedDeskAssignmentAgentId}
@@ -6916,7 +6915,7 @@ export function RetroOffice3D({
                 }}
                 className="w-full rounded-md border border-amber-800/25 bg-[#1c1610] px-2 py-2 text-[11px] text-amber-100 outline-none transition-colors focus:border-amber-500/50"
               >
-                <option value="">Unassigned desk.</option>
+                <option value="">{tr("Unassigned desk.")}</option>
                 {agents.map((agent) => (
                   <option key={agent.id} value={agent.id}>
                     {agent.name}
@@ -6924,7 +6923,7 @@ export function RetroOffice3D({
                 ))}
               </select>
               <div className="mt-2 text-[10px] text-amber-500/50">
-                Assigning a desk makes `target: desk` route that agent here.
+                {tr("Assigning a desk makes `target: desk` route that agent here.")}
               </div>
             </div>
           ) : null}
@@ -6935,7 +6934,7 @@ export function RetroOffice3D({
       {!immersiveOverlayActive && editMode && drawerOpen && !selectedItem && (
         <div className="absolute bottom-14 right-3 w-52 max-h-[calc(100vh-100px)] overflow-y-auto rounded-lg bg-[#1c1610]/95 border border-amber-800/20 p-3 shadow-xl backdrop-blur-sm z-20">
           <div className="text-[10px] text-amber-500/70 font-bold uppercase tracking-widest mb-3">
-            Objects
+            {tr("Objects")}
           </div>
           <div className="grid grid-cols-2 gap-2">
             {PALETTE.map((entry) => (
@@ -6978,11 +6977,11 @@ export function RetroOffice3D({
           {onAddAgent ? (
             <button
               onClick={onAddAgent}
-              title="Add agent"
+              title={tr("Add agent")}
               className="flex h-7 items-center justify-center gap-1 rounded-md border border-cyan-500/35 bg-[#071018]/92 px-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-cyan-200 transition-all backdrop-blur-sm hover:border-cyan-400/55 hover:text-white"
             >
               <UserPlus size={12} />
-              <span>Add</span>
+              <span>{tr("Add")}</span>
             </button>
           ) : null}
           <div
@@ -7000,14 +6999,14 @@ export function RetroOffice3D({
           {/* New Idea 7: Heatmap toggle. */}
           <button
             onClick={() => setHeatmapMode((p) => !p)}
-            title="Toggle heatmap"
+            title={tr("Toggle heatmap")}
             className={`w-7 h-7 flex items-center justify-center rounded-md transition-all backdrop-blur-sm border ${heatmapMode ? "bg-amber-500/30 text-amber-300 border-amber-500/50" : "bg-[#1c1610]/80 text-amber-500/40 border-amber-900/20 hover:text-amber-400"}`}
           >
             <MapIcon size={12} />
           </button>
           <button
             onClick={() => setTrailMode((p) => !p)}
-            title="Toggle trails"
+            title={tr("Toggle trails")}
             className={`w-7 h-7 flex items-center justify-center rounded-md transition-all backdrop-blur-sm border ${trailMode ? "bg-amber-500/30 text-amber-300 border-amber-500/50" : "bg-[#1c1610]/80 text-amber-500/40 border-amber-900/20 hover:text-amber-400"}`}
           >
             <Maximize size={12} />
@@ -7026,7 +7025,7 @@ export function RetroOffice3D({
           </button>
           <button
             onClick={() => setSettingsModalOpen(true)}
-            title="Voice reply settings"
+            title={tr("Voice reply settings")}
             className={`w-7 h-7 flex items-center justify-center rounded-md transition-all backdrop-blur-sm border ${settingsModalOpen ? "bg-amber-500/30 text-amber-300 border-amber-500/50" : "bg-[#1c1610]/80 text-amber-500/40 border-amber-900/20 hover:text-amber-400"}`}
           >
             <Settings2 size={12} />
@@ -7046,14 +7045,14 @@ export function RetroOffice3D({
                 onClick={handleReset}
                 className="px-3 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider bg-[#2a1e14]/90 text-amber-400/60 border border-amber-800/20 hover:bg-[#3a2a1a] backdrop-blur-sm"
               >
-                Reset
+                {tr("Reset")}
               </button>
               {selectedUid && (
                 <button
                   onClick={handleDelete}
                   className="px-3 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider bg-red-900/40 text-red-400 border border-red-800/30 hover:bg-red-900/60 backdrop-blur-sm"
                 >
-                  Delete
+                  {tr("Delete")}
                 </button>
               )}
               <button
@@ -7072,10 +7071,10 @@ export function RetroOffice3D({
             <div className="flex items-start justify-between border-b border-cyan-500/10 px-4 py-3">
               <div>
                 <div className="font-mono text-[10px] font-semibold tracking-[0.28em] text-cyan-300/75">
-                  STUDIO SETTINGS
+                  {tr("STUDIO SETTINGS")}
                 </div>
                 <div className="mt-1 text-[11px] text-white/45">
-                  Customize the office banner and spoken replies across the app.
+                  {tr("Customize the office banner and spoken replies across the app.")}
                 </div>
               </div>
               <button
@@ -7179,15 +7178,15 @@ export function RetroOffice3D({
             {/* Ideas 6 + 8: Gateway status, agent counts, vibe score. */}
             <div className="flex items-center gap-3 bg-black/60 backdrop-blur-sm rounded-full px-3 py-1 text-[10px] font-mono">
               <span className="text-amber-500/60">
-                {agents.filter((a) => a.status === "working").length} working
+                {agents.filter((a) => a.status === "working").length} {tr("working")}
               </span>
               <span className="opacity-30">·</span>
               <span className="text-amber-500/60">
-                {agents.filter((a) => a.status === "idle").length} idle
+                {agents.filter((a) => a.status === "idle").length} {tr("idle")}
               </span>
               <span className="opacity-30">·</span>
               <span className="text-amber-500/60">
-                {agents.filter((a) => a.status === "error").length} error
+                {agents.filter((a) => a.status === "error").length} {tr("error")}
               </span>
               {/* New Idea 6: Vibe score with animated EQ bars. */}
               {(() => {
@@ -7224,14 +7223,14 @@ export function RetroOffice3D({
                 <>
                   <span className="opacity-30">·</span>
                   <span className="text-amber-400/40">
-                    drag · scroll · space+drag · dbl-click
+                    {tr("drag · scroll · space+drag · dbl-click")}
                   </span>
                 </>
               )}
               {spaceDown && (
                 <>
                   <span className="opacity-30">·</span>
-                  <span className="text-amber-300/80">pan mode</span>
+                  <span className="text-amber-300/80">{tr("pan mode")}</span>
                 </>
               )}
             </div>

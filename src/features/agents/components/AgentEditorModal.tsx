@@ -23,6 +23,7 @@ import type { GatewayClient } from "@/lib/gateway/GatewayClient";
 import type { AgentFileName } from "@/lib/agents/agentFiles";
 import { AGENT_FILE_META } from "@/lib/agents/agentFiles";
 import { renameGatewayAgent } from "@/lib/gateway/agentConfig";
+import { tr } from "@/lib/i18n";
 
 export type AgentEditorSection = "avatar" | AgentFileName;
 
@@ -145,13 +146,13 @@ export const AgentEditorModal = ({
           <aside className="flex w-[240px] shrink-0 flex-col border-r border-border/50 bg-muted/20">
             <div className="border-b border-border/40 px-5 py-4">
               <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                Agent editor
+                {tr("Agent editor")}
               </div>
               <div className="mt-1 truncate text-lg font-semibold text-foreground">
                 {agent.name}
               </div>
               <div className="mt-1 text-xs text-muted-foreground">
-                Edit avatar and agent brain settings from the office.
+                {tr("Edit avatar and agent brain settings from the office.")}
               </div>
               {onNavigateAgent ? (
                 <div className="mt-4 flex items-center gap-2">
@@ -165,7 +166,7 @@ export const AgentEditorModal = ({
                     className="inline-flex items-center gap-1 rounded-md border border-border/50 bg-background/40 px-2.5 py-1.5 text-xs text-foreground transition-colors hover:border-border hover:bg-background/70 disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     <ChevronLeft className="h-3.5 w-3.5" />
-                    <span>Previous</span>
+                    <span>{tr("Previous")}</span>
                   </button>
                   <button
                     type="button"
@@ -176,7 +177,7 @@ export const AgentEditorModal = ({
                     disabled={!nextAgent}
                     className="inline-flex items-center gap-1 rounded-md border border-border/50 bg-background/40 px-2.5 py-1.5 text-xs text-foreground transition-colors hover:border-border hover:bg-background/70 disabled:cursor-not-allowed disabled:opacity-40"
                   >
-                    <span>Next</span>
+                    <span>{tr("Next")}</span>
                     <ChevronRight className="h-3.5 w-3.5" />
                   </button>
                 </div>
@@ -217,9 +218,9 @@ export const AgentEditorModal = ({
                 >
                   <Trash2 className="h-4 w-4" />
                   <div>
-                    <div className="text-sm font-semibold text-inherit">Delete Agent</div>
+                    <div className="text-sm font-semibold text-inherit">{tr("Delete Agent")}</div>
                     <div className="text-xs text-red-100/85">
-                      Remove this agent from Claw3D and OpenClaw.
+                      {tr("Remove this agent from Claw3D and OpenClaw.")}
                     </div>
                   </div>
                 </button>
@@ -240,10 +241,10 @@ export const AgentEditorModal = ({
               <div className="flex min-h-0 flex-1 flex-col">
                 <div className="border-b border-border/40 px-6 py-4">
                   <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                    Agent file editor
+                    {tr("Agent file editor")}
                   </div>
                   <div className="mt-1 text-sm text-muted-foreground">
-                    Edit one agent file at a time and save it through the gateway.
+                    {tr("Edit one agent file at a time and save it through the gateway.")}
                   </div>
                 </div>
                 <div className="min-h-0 flex-1">
@@ -270,7 +271,7 @@ export const AgentEditorModal = ({
               </div>
             ) : (
               <div className="flex h-full items-center justify-center p-8 text-sm text-muted-foreground">
-                Connect to a gateway to edit brain files.
+                {tr("Connect to a gateway to edit brain files.")}
               </div>
             )}
           </section>

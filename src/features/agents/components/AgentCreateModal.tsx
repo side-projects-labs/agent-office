@@ -5,6 +5,7 @@ import { Shuffle } from "lucide-react";
 import type { AgentCreateModalSubmitPayload } from "@/features/agents/creation/types";
 import { AgentAvatar } from "@/features/agents/components/AgentAvatar";
 import { randomUUID } from "@/lib/uuid";
+import { tr } from "@/lib/i18n";
 
 type AgentCreateModalProps = {
   open: boolean;
@@ -65,10 +66,10 @@ const AgentCreateModalContent = ({
         <div className="flex items-center justify-between border-b border-border/35 px-6 py-6">
           <div>
             <div className="font-mono text-[11px] font-semibold tracking-[0.06em] text-muted-foreground">
-              New agent
+              {tr("New agent")}
             </div>
-            <div className="mt-1 text-base font-semibold text-foreground">Launch agent</div>
-            <div className="mt-1 text-xs text-muted-foreground">Name it and activate immediately.</div>
+            <div className="mt-1 text-base font-semibold text-foreground">{tr("Launch agent")}</div>
+            <div className="mt-1 text-xs text-muted-foreground">{tr("Name it and activate immediately.")}</div>
           </div>
           <button
             type="button"
@@ -76,26 +77,26 @@ const AgentCreateModalContent = ({
             onClick={onClose}
             disabled={busy}
           >
-            Close
+            {tr("Close")}
           </button>
         </div>
 
         <div className="grid gap-4 px-6 py-5">
           <label className={labelClassName}>
-            Name
+            {tr("Name")}
             <input
               aria-label="Agent name"
               value={name}
               onChange={(event) => setName(event.target.value)}
               className={`mt-1 ${fieldClassName}`}
-              placeholder="My agent"
+              placeholder={tr("My agent")}
             />
           </label>
           <div className="-mt-2 text-[11px] text-muted-foreground">
-            You can rename this agent from the main chat header.
+            {tr("You can rename this agent from the main chat header.")}
           </div>
           <div className="grid justify-items-center gap-2 border-t border-border/40 pt-3">
-            <div className={labelClassName}>Choose avatar</div>
+            <div className={labelClassName}>{tr("Choose avatar")}</div>
             <AgentAvatar
               seed={avatarSeed}
               name={name.trim() || "New Agent"}
@@ -110,7 +111,7 @@ const AgentCreateModalContent = ({
               disabled={busy}
             >
               <Shuffle className="h-3.5 w-3.5" />
-              Shuffle
+              {tr("Shuffle")}
             </button>
           </div>
 
@@ -122,7 +123,7 @@ const AgentCreateModalContent = ({
         </div>
 
         <div className="flex items-center justify-between border-t border-border/45 px-6 pb-4 pt-5">
-          <div className="text-[11px] text-muted-foreground">Authority can be configured after launch.</div>
+          <div className="text-[11px] text-muted-foreground">{tr("Authority can be configured after launch.")}</div>
           <button
             type="submit"
             className="ui-btn-primary px-3 py-1.5 font-mono text-[11px] font-semibold tracking-[0.06em] disabled:cursor-not-allowed disabled:border-border disabled:bg-muted disabled:text-muted-foreground"

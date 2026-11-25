@@ -35,6 +35,7 @@ import {
   type AssistantTraceEvent,
   type AgentChatItem,
 } from "./chatItems";
+import { tr } from "@/lib/i18n";
 
 const formatChatTimestamp = (timestampMs: number): string => {
   return new Intl.DateTimeFormat(undefined, {
@@ -306,7 +307,7 @@ const ThinkingDetailsRow = memo(function ThinkingDetailsRow({
         <ChevronRight className="h-3 w-3 shrink-0 transition group-open:rotate-90" />
         <span className="flex min-w-0 items-center gap-2">
           <span className="font-mono text-[10px] font-medium tracking-[0.02em]">
-            Thinking (internal)
+            {tr("Thinking (internal)")}
           </span>
           {typeof durationMs === "number" ? (
             <span className="inline-flex items-center gap-1 font-mono text-[10px] font-medium tracking-[0.02em] text-muted-foreground/80">
@@ -358,7 +359,7 @@ const UserMessageCard = memo(function UserMessageCard({
     <div className="ui-chat-user-card w-full max-w-[70ch] self-end overflow-hidden rounded-[var(--radius-small)] bg-[color:var(--chat-user-bg)]">
       <div className="flex items-center justify-between gap-3 bg-[color:var(--chat-user-header-bg)] px-3 py-2 dark:px-3.5 dark:py-2.5">
         <div className="type-meta min-w-0 truncate font-mono text-foreground/90">
-          You
+          {tr("You")}
         </div>
         {typeof timestampMs === "number" ? (
           <time className="type-meta shrink-0 rounded-md bg-surface-3 px-2 py-0.5 font-mono text-muted-foreground/70">
@@ -441,7 +442,7 @@ const AssistantMessageCard = memo(function AssistantMessageCard({
             data-testid="agent-typing-indicator"
           >
             <span className="font-mono text-[10px] font-medium tracking-[0.02em]">
-              Thinking
+              {tr("Thinking")}
             </span>
             <span className="typing-dots" aria-hidden="true">
               <span />
@@ -459,7 +460,7 @@ const AssistantMessageCard = memo(function AssistantMessageCard({
                 data-testid="agent-typing-indicator"
               >
                 <span className="font-mono text-[10px] font-medium tracking-[0.02em]">
-                  Thinking
+                  {tr("Thinking")}
                 </span>
                 <span className="typing-dots" aria-hidden="true">
                   <span />
@@ -786,7 +787,7 @@ const AgentChatTranscript = memo(function AgentChatTranscript({
           {historyMaybeTruncated && isAtTop ? (
             <div className="-mx-1 flex items-center justify-between gap-3 rounded-md bg-surface-2 px-3 py-2 shadow-2xs">
               <div className="type-meta min-w-0 truncate font-mono text-muted-foreground">
-                Showing most recent {typeof historyFetchedCount === "number" ? historyFetchedCount : "?"} messages
+                {tr("Showing most recent")} {typeof historyFetchedCount === "number" ? historyFetchedCount : "?"} {tr("messages")}
                 {typeof historyFetchLimit === "number" ? ` (limit ${historyFetchLimit})` : ""}
               </div>
               <button
@@ -794,7 +795,7 @@ const AgentChatTranscript = memo(function AgentChatTranscript({
                 className="shrink-0 rounded-md border border-border/70 bg-surface-3 px-3 py-1.5 font-mono text-[12px] font-medium tracking-[0.02em] text-foreground transition hover:bg-surface-2"
                 onClick={onLoadMoreHistory}
               >
-                Load more
+                {tr("Load more")}
               </button>
             </div>
           ) : null}
@@ -858,7 +859,7 @@ const AgentChatTranscript = memo(function AgentChatTranscript({
           }}
           aria-label="Jump to latest"
         >
-          Jump to latest
+          {tr("Jump to latest")}
         </button>
       ) : null}
     </div>
@@ -1021,7 +1022,7 @@ const AgentChatComposer = memo(function AgentChatComposer({
               }}
             >
               {modelOptions.length === 0 ? (
-                <option value="">No models found</option>
+                <option value="">{tr("No models found")}</option>
               ) : null}
               {modelOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -1042,19 +1043,19 @@ const AgentChatComposer = memo(function AgentChatComposer({
                   onThinkingChange(nextValue ? nextValue : null);
                 }}
               >
-                <option value="">Default</option>
-                <option value="off">Off</option>
-                <option value="minimal">Minimal</option>
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-                <option value="xhigh">XHigh</option>
+                <option value="">{tr("Default")}</option>
+                <option value="off">{tr("Off")}</option>
+                <option value="minimal">{tr("Minimal")}</option>
+                <option value="low">{tr("Low")}</option>
+                <option value="medium">{tr("Medium")}</option>
+                <option value="high">{tr("High")}</option>
+                <option value="xhigh">{tr("XHigh")}</option>
               </select>
             </InlineHoverTooltip>
           ) : null}
         </div>
         <div className="hidden">
-          <span className="font-mono tracking-[0.02em]">Show</span>
+          <span className="font-mono tracking-[0.02em]">{tr("Show")}</span>
           <button
             type="button"
             role="switch"
@@ -1067,7 +1068,7 @@ const AgentChatComposer = memo(function AgentChatComposer({
             }`}
             onClick={() => onToolCallingToggle(!toolCallingEnabled)}
           >
-            Tools
+            {tr("Tools")}
           </button>
           <button
             type="button"
@@ -1081,7 +1082,7 @@ const AgentChatComposer = memo(function AgentChatComposer({
             }`}
             onClick={() => onThinkingTracesToggle(!showThinkingTraces)}
           >
-            Thinking
+            {tr("Thinking")}
           </button>
         </div>
       </div>
@@ -1103,7 +1104,7 @@ const AgentChatComposer = memo(function AgentChatComposer({
                   className="flex w-full min-w-0 max-w-full items-center gap-1 overflow-hidden rounded-md border border-border/70 bg-card/80 px-2 py-1 text-[11px] text-foreground"
                 >
                   <span className="font-mono text-[10px] uppercase tracking-[0.06em] text-muted-foreground">
-                    Queued
+                    {tr("Queued")}
                   </span>
                   <span
                     className="min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap"
@@ -1141,7 +1142,7 @@ const AgentChatComposer = memo(function AgentChatComposer({
               disabled
               className="ui-btn-primary ui-btn-send invisible px-3 py-2 font-mono text-[12px] font-medium tracking-[0.02em]"
             >
-              Send
+              {tr("Send")}
             </button>
           </div>
         ) : null}
@@ -1162,7 +1163,7 @@ const AgentChatComposer = memo(function AgentChatComposer({
                     />
                   ) : (
                     <div className="flex h-16 w-16 items-center justify-center px-2 text-center font-mono text-[10px] text-muted-foreground">
-                      File
+                      {tr("File")}
                     </div>
                   )}
                   <button
@@ -1222,7 +1223,7 @@ const AgentChatComposer = memo(function AgentChatComposer({
             onClick={() => attachmentInputRef.current?.click()}
             disabled={!canSend || observeOnly}
             aria-label="Attach files"
-            title="Attach files"
+            title={tr("Attach files")}
           >
             <span className="inline-flex items-center gap-1.5">
               <Paperclip className="h-3.5 w-3.5" />
@@ -1746,7 +1747,7 @@ export const AgentChatPanel = ({
                 type="button"
                 data-testid="agent-settings-toggle"
                 aria-label="Open behavior"
-                title="Open behavior"
+                title={tr("Open behavior")}
                 onClick={onOpenSettings}
               >
                 <ChevronRight className="h-3.5 w-3.5" />
@@ -1757,7 +1758,7 @@ export const AgentChatPanel = ({
               type="button"
               data-testid="agent-new-session-toggle"
               aria-label="Start new session"
-              title="Start new session"
+              title={tr("Start new session")}
               onClick={() => {
                 void handleNewSession();
               }}

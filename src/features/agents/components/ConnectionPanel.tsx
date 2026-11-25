@@ -2,6 +2,7 @@ import type { GatewayStatus } from "@/lib/gateway/GatewayClient";
 import type { StudioGatewayAdapterType } from "@/lib/studio/settings";
 import { X } from "lucide-react";
 import { resolveGatewayStatusBadgeClass, resolveGatewayStatusLabel } from "./colorSemantics";
+import { tr } from "@/lib/i18n";
 
 type ConnectionPanelProps = {
   gatewayUrl: string;
@@ -101,19 +102,19 @@ export const ConnectionPanel = ({
             aria-label="Close gateway connection panel"
           >
             <X className="h-3.5 w-3.5" />
-            Close
+            {tr("Close")}
           </button>
         ) : null}
       </div>
       <div className="grid gap-3 lg:grid-cols-[1.4fr_1fr]">
         <label className="flex flex-col gap-1 font-mono text-[10px] font-semibold tracking-[0.06em] text-muted-foreground">
-          Upstream URL
+          {tr("Upstream URL")}
           <input
             className="ui-input h-10 rounded-md px-4 font-sans text-sm text-foreground outline-none"
             type="text"
             value={gatewayUrl}
             onChange={(event) => onGatewayUrlChange(event.target.value)}
-            placeholder="ws://localhost:18789"
+            placeholder={tr("ws://localhost:18789")}
             spellCheck={false}
           />
         </label>
@@ -130,9 +131,9 @@ export const ConnectionPanel = ({
         </label>
       </div>
       <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
-        <span className="font-mono">Selected backend: {selectedAdapterType}</span>
-        <span className="font-mono">Active backend: {activeAdapterType}</span>
-        <span>Each backend keeps its own saved URL and token.</span>
+        <span className="font-mono">{tr("Selected backend:")} {selectedAdapterType}</span>
+        <span className="font-mono">{tr("Active backend:")} {activeAdapterType}</span>
+        <span>{tr("Each backend keeps its own saved URL and token.")}</span>
       </div>
       <div className="text-[11px] leading-snug text-muted-foreground">
         {selectedAdapterHint}
@@ -143,42 +144,42 @@ export const ConnectionPanel = ({
           type="button"
           onClick={applyDemoPreset}
         >
-          Demo backend
+          {tr("Demo backend")}
         </button>
         <button
           className="ui-btn-secondary px-3 py-1.5 text-[11px] font-semibold tracking-[0.05em]"
           type="button"
           onClick={applyHermesPreset}
         >
-          Hermes backend
+          {tr("Hermes backend")}
         </button>
         <button
           className="ui-btn-secondary px-3 py-1.5 text-[11px] font-semibold tracking-[0.05em]"
           type="button"
           onClick={applyLocalPreset}
         >
-          Local runtime
+          {tr("Local runtime")}
         </button>
         <button
           className="ui-btn-secondary px-3 py-1.5 text-[11px] font-semibold tracking-[0.05em]"
           type="button"
           onClick={applyClaw3dPreset}
         >
-          Claw3D runtime
+          {tr("Claw3D runtime")}
         </button>
         <button
           className="ui-btn-secondary px-3 py-1.5 text-[11px] font-semibold tracking-[0.05em]"
           type="button"
           onClick={applyCustomPreset}
         >
-          Custom backend
+          {tr("Custom backend")}
         </button>
         <button
           className="ui-btn-secondary px-3 py-1.5 text-[11px] font-semibold tracking-[0.05em]"
           type="button"
           onClick={applyOpenClawPreset}
         >
-          OpenClaw backend
+          {tr("OpenClaw backend")}
         </button>
       </div>
       {error ? (

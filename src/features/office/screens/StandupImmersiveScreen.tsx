@@ -3,6 +3,7 @@
 import { ExternalLink, X } from "lucide-react";
 
 import type { StandupMeeting } from "@/lib/office/standup/types";
+import { tr } from "@/lib/i18n";
 
 const sourceTone = (ready: boolean, stale: boolean) => {
   if (!ready) return stale ? "text-amber-200 border-amber-400/25" : "text-rose-200 border-rose-400/25";
@@ -22,7 +23,7 @@ export function StandupImmersiveScreen({
         <div className="flex items-center justify-between border-b border-cyan-500/15 px-6 py-4">
           <div>
             <div className="font-mono text-[11px] uppercase tracking-[0.28em] text-cyan-200/85">
-              Standup Board
+              {tr("Standup Board")}
             </div>
             <div className="mt-1 font-mono text-[12px] text-white/50">
               {meeting.phase === "gathering"
@@ -38,15 +39,15 @@ export function StandupImmersiveScreen({
             className="inline-flex items-center gap-2 rounded border border-white/10 bg-white/5 px-3 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-white/70 transition-colors hover:border-white/20 hover:text-white"
           >
             <X className="h-4 w-4" />
-            Close
+            {tr("Close")}
           </button>
         </div>
 
         <div className="grid gap-4 border-b border-cyan-500/10 px-6 py-4 font-mono text-[11px] text-white/60 md:grid-cols-3">
-          <div>Phase: {meeting.phase}</div>
-          <div>Speaker: {meeting.currentSpeakerAgentId ?? "Waiting"}</div>
+          <div>{tr("Phase:")} {meeting.phase}</div>
+          <div>{tr("Speaker:")} {meeting.currentSpeakerAgentId ?? "Waiting"}</div>
           <div>
-            Progress: {meeting.arrivedAgentIds.length}/{meeting.participantOrder.length} arrived
+            {tr("Progress:")} {meeting.arrivedAgentIds.length}/{meeting.participantOrder.length} {tr("arrived")}
           </div>
         </div>
 
@@ -66,7 +67,7 @@ export function StandupImmersiveScreen({
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/45">
-                        Participant
+                        {tr("Participant")}
                       </div>
                       <div className="mt-1 text-lg font-semibold text-white">
                         {card.agentName}
@@ -74,7 +75,7 @@ export function StandupImmersiveScreen({
                     </div>
                     {isSpeaking ? (
                       <div className="rounded border border-cyan-400/30 bg-cyan-500/10 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-cyan-100">
-                        Speaking
+                        {tr("Speaking")}
                       </div>
                     ) : null}
                   </div>
@@ -82,7 +83,7 @@ export function StandupImmersiveScreen({
                   <div className="mt-4 space-y-4">
                     <div>
                       <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                        Current task
+                        {tr("Current task")}
                       </div>
                       <div className="mt-1 text-sm leading-6 text-white/85">
                         {card.currentTask}
@@ -91,12 +92,12 @@ export function StandupImmersiveScreen({
 
                     <div>
                       <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                        Recent commits
+                        {tr("Recent commits")}
                       </div>
                       <div className="mt-2 space-y-2">
                         {card.recentCommits.length === 0 ? (
                           <div className="font-mono text-[11px] text-white/35">
-                            No recent GitHub activity.
+                            {tr("No recent GitHub activity.")}
                           </div>
                         ) : (
                           card.recentCommits.map((commit) => (
@@ -118,12 +119,12 @@ export function StandupImmersiveScreen({
 
                     <div>
                       <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                        Active tickets
+                        {tr("Active tickets")}
                       </div>
                       <div className="mt-2 space-y-2">
                         {card.activeTickets.length === 0 ? (
                           <div className="font-mono text-[11px] text-white/35">
-                            No active Jira tickets.
+                            {tr("No active Jira tickets.")}
                           </div>
                         ) : (
                           card.activeTickets.map((ticket) => (
@@ -162,12 +163,12 @@ export function StandupImmersiveScreen({
 
                     <div>
                       <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                        Blockers
+                        {tr("Blockers")}
                       </div>
                       <div className="mt-2 space-y-2">
                         {card.blockers.length === 0 ? (
                           <div className="font-mono text-[11px] text-emerald-200/75">
-                            No blockers reported.
+                            {tr("No blockers reported.")}
                           </div>
                         ) : (
                           card.blockers.map((blocker, index) => (
@@ -185,7 +186,7 @@ export function StandupImmersiveScreen({
                     {card.manualNotes.length > 0 ? (
                       <div>
                         <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                          Manual notes
+                          {tr("Manual notes")}
                         </div>
                         <div className="mt-2 space-y-2">
                           {card.manualNotes.map((note, index) => (
@@ -202,7 +203,7 @@ export function StandupImmersiveScreen({
 
                     <div>
                       <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
-                        Sources
+                        {tr("Sources")}
                       </div>
                       <div className="mt-2 flex flex-wrap gap-2">
                         {card.sourceStates.map((source) => (

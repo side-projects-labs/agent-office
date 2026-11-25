@@ -118,6 +118,7 @@ import {
   type SettingsRouteTab,
 } from "@/features/agents/operations/settingsRouteWorkflow";
 import { useSettingsRouteController } from "@/features/agents/operations/useSettingsRouteController";
+import { tr } from "@/lib/i18n";
 
 const PENDING_EXEC_APPROVAL_PRUNE_GRACE_MS = 500;
 
@@ -1371,7 +1372,7 @@ const AgentsPageScreen = () => {
         <div className="flex min-h-screen items-center justify-center px-6">
           <div className="glass-panel ui-panel w-full max-w-md px-6 py-6 text-center">
             <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-              Claw3D
+              {tr("Claw3D")}
             </div>
             <div className="mt-3 text-sm text-muted-foreground">
               {status === "connecting" ? "Connecting to gateway…" : "Booting Studio…"}
@@ -1403,7 +1404,7 @@ const AgentsPageScreen = () => {
                   className="ui-btn-secondary px-3 py-1.5 font-mono text-[10px] font-semibold tracking-[0.06em]"
                   onClick={handleBackToChat}
                 >
-                  Back to chat
+                  {tr("Back to chat")}
                 </button>
               </div>
             ) : null}
@@ -1457,9 +1458,9 @@ const AgentsPageScreen = () => {
         <div className="flex min-h-screen items-center justify-center px-6">
           <div className="glass-panel ui-panel w-full max-w-md px-6 py-6 text-center">
             <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-              Claw3D
+              {tr("Claw3D")}
             </div>
-            <div className="mt-3 text-sm text-muted-foreground">Loading agents…</div>
+            <div className="mt-3 text-sm text-muted-foreground">{tr("Loading agents…")}</div>
           </div>
         </div>
       </div>
@@ -1471,7 +1472,7 @@ const AgentsPageScreen = () => {
       {state.loading ? (
         <div className="pointer-events-none fixed bottom-4 left-0 right-0 z-50 flex justify-center px-3">
           <div className="glass-panel ui-card px-6 py-3 font-mono text-[11px] tracking-[0.08em] text-muted-foreground">
-            Loading agents…
+            {tr("Loading agents…")}
           </div>
         </div>
       ) : null}
@@ -1531,7 +1532,7 @@ const AgentsPageScreen = () => {
                     className="ui-btn-secondary w-full px-3 py-1.5 font-mono text-[10px] font-semibold tracking-[0.06em]"
                     onClick={handleBackToChat}
                   >
-                    Back to chat
+                    {tr("Back to chat")}
                   </button>
                 </div>
                 <nav className="py-3">
@@ -1570,9 +1571,9 @@ const AgentsPageScreen = () => {
                       {inspectSidebarAgent?.name ?? settingsRouteAgentId ?? "Agent settings"}
                     </div>
                     <div className="mt-1 font-mono text-[11px] text-muted-foreground">
-                      Model: {settingsHeaderModel}{" "}
+                      {tr("Model:")} {settingsHeaderModel}{" "}
                       <span className="mx-2 text-border">|</span>
-                      Thinking: {settingsHeaderThinking}
+                      {tr("Thinking:")} {settingsHeaderThinking}
                     </div>
                   </div>
                   <div className="rounded-md border border-border/70 bg-surface-1 px-3 py-1 font-mono text-[11px] text-muted-foreground">
@@ -1699,7 +1700,7 @@ const AgentsPageScreen = () => {
                     )
                   ) : (
                     <EmptyStatePanel
-                      title="Agent not found."
+                      title={tr("Agent not found.")}
                       description="Back to chat and select an available agent."
                       fillHeight
                       className="items-center p-6 text-center text-sm"
@@ -1718,7 +1719,7 @@ const AgentsPageScreen = () => {
                     data-active={mobilePane === "fleet" ? "true" : "false"}
                     onClick={() => setMobilePane("fleet")}
                   >
-                    Fleet
+                    {tr("Fleet")}
                   </button>
                   <button
                     type="button"
@@ -1726,7 +1727,7 @@ const AgentsPageScreen = () => {
                     data-active={mobilePane === "chat" ? "true" : "false"}
                     onClick={() => setMobilePane("chat")}
                   >
-                    Chat
+                    {tr("Chat")}
                   </button>
                 </div>
               </div>
@@ -1858,13 +1859,13 @@ const AgentsPageScreen = () => {
         >
           <div className="ui-panel w-full max-w-md p-6">
             <div className="font-mono text-[10px] font-semibold tracking-[0.06em] text-muted-foreground">
-              Agent create in progress
+              {tr("Agent create in progress")}
             </div>
             <div className="mt-2 text-base font-semibold text-foreground">
               {createAgentBlock.agentName}
             </div>
             <div className="mt-3 text-sm text-muted-foreground">
-              Studio is temporarily locked until creation finishes.
+              {tr("Studio is temporarily locked until creation finishes.")}
             </div>
             {createBlockStatusLine ? (
               <div className="ui-card mt-4 px-3 py-2 font-mono text-[11px] tracking-[0.06em] text-foreground">
@@ -1890,7 +1891,7 @@ const AgentsPageScreen = () => {
               {restartingMutationBlock.agentName}
             </div>
             <div className="mt-3 text-sm text-muted-foreground">
-              Studio is temporarily locked until the gateway restarts.
+              {tr("Studio is temporarily locked until the gateway restarts.")}
             </div>
             {restartingMutationStatusLine ? (
               <div className="ui-card mt-4 px-3 py-2 font-mono text-[11px] tracking-[0.06em] text-foreground">

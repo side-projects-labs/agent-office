@@ -2,6 +2,7 @@
 
 import { AudioLines, PhoneCall, Smartphone } from "lucide-react";
 import type { MockPhoneCallScenario } from "@/lib/office/call/types";
+import { tr } from "@/lib/i18n";
 
 export type PhoneCallStep =
   | "dialing"
@@ -38,7 +39,7 @@ export function PhoneBoothImmersiveScreen({
           <div className="rounded-[32px] border border-sky-300/18 bg-slate-950/65 p-8 shadow-[0_24px_90px_rgba(2,8,23,0.75)]">
             <div className="flex items-center gap-3 text-[11px] uppercase tracking-[0.28em] text-sky-200/70">
               <PhoneCall className="h-4 w-4" />
-              Phone Booth Call
+              {tr("Phone Booth Call")}
             </div>
             <div className="mt-4 text-4xl font-semibold tracking-[0.08em] text-sky-50">
               {scenario.callee}
@@ -48,7 +49,7 @@ export function PhoneBoothImmersiveScreen({
             </div>
             <div className="mt-8 rounded-[28px] border border-sky-300/16 bg-slate-900/90 p-6">
               <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.24em] text-sky-200/60">
-                <span>Calling from booth</span>
+                <span>{tr("Calling from booth")}</span>
                 <span>{scenario.voiceAvailable ? "ElevenLabs ready" : "Text fallback"}</span>
               </div>
               <div className="mt-5 text-3xl font-medium tracking-[0.24em] text-sky-50">
@@ -88,7 +89,7 @@ export function PhoneBoothImmersiveScreen({
               <div className="absolute left-1/2 top-3 h-1.5 w-28 -translate-x-1/2 rounded-full bg-slate-700" />
               <div className="relative flex h-full flex-col overflow-hidden rounded-[34px] border border-sky-300/12 bg-[linear-gradient(180deg,#081225_0%,#020617_100%)] px-6 py-8">
                 <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.24em] text-sky-200/65">
-                  <span>Cellular relay</span>
+                  <span>{tr("Cellular relay")}</span>
                   <Smartphone className="h-4 w-4" />
                 </div>
                 <div className="mt-8 flex h-28 w-28 items-center justify-center self-center rounded-full border border-sky-300/22 bg-sky-400/10 text-sky-100">

@@ -10,6 +10,7 @@ import type {
   CompanyBuilderPlan,
   CompanyBuilderRole,
 } from "@/features/company-builder/types";
+import { tr } from "@/lib/i18n";
 
 type CompanyBuilderModalProps = {
   open: boolean;
@@ -190,11 +191,11 @@ export function CompanyBuilderModal({
           <div>
             <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-cyan-200/70">
               <Sparkles className="h-4 w-4" />
-              Company Builder
+              {tr("Company Builder")}
             </div>
-            <h2 className="mt-1 text-lg font-semibold">Design an AI company from one prompt</h2>
+            <h2 className="mt-1 text-lg font-semibold">{tr("Design an AI company from one prompt")}</h2>
             <p className="mt-1 text-sm text-white/55">
-              Uses your connected runtime
+              {tr("Uses your connected runtime")}
               {plannerAgentName ? ` via ${plannerAgentName}.` : "."}
             </p>
           </div>
@@ -212,7 +213,7 @@ export function CompanyBuilderModal({
               }}
               disabled={!canClear}
             >
-              Clear
+              {tr("Clear")}
             </button>
             <button
               type="button"
@@ -227,7 +228,7 @@ export function CompanyBuilderModal({
               disabled={!canGenerate}
             >
               <Sparkles className="h-3.5 w-3.5" />
-              Generate
+              {tr("Generate")}
             </button>
             <button
               type="button"
@@ -238,7 +239,7 @@ export function CompanyBuilderModal({
               disabled={!canPreviewChart}
             >
               <GitBranch className="h-3.5 w-3.5" />
-              Org Chart
+              {tr("Org Chart")}
             </button>
             <button
               type="button"
@@ -254,7 +255,7 @@ export function CompanyBuilderModal({
               disabled={!canCreate}
             >
               <Wand2 className="h-3.5 w-3.5" />
-              Create Company
+              {tr("Create Company")}
             </button>
             <button
               type="button"
@@ -275,7 +276,7 @@ export function CompanyBuilderModal({
                 <div className="space-y-3">
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-xs font-semibold uppercase tracking-[0.12em] text-white/60">
-                      Source prompt
+                      {tr("Source prompt")}
                     </p>
                     <button
                       type="button"
@@ -302,16 +303,16 @@ export function CompanyBuilderModal({
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.12em] text-white/60">
-                      Improved Brief
+                      {tr("Improved Brief")}
                     </p>
                     <p className="mt-1 text-[11px] text-white/45">
-                      This is the text used for company generation.
+                      {tr("This is the text used for company generation.")}
                     </p>
                   </div>
                 </div>
                 <textarea
                   className={`${textareaClassName} mt-3 min-h-[340px]`}
-                  placeholder="AI will rewrite the brief here."
+                  placeholder={tr("AI will rewrite the brief here.")}
                   value={input.improvedBrief}
                   onChange={(event) =>
                     setInput((current) => ({
@@ -326,23 +327,22 @@ export function CompanyBuilderModal({
               <div className="space-y-3 rounded-xl border border-white/10 bg-white/[0.03] p-4">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.12em] text-white/60">
-                    Company Actions
+                    {tr("Company Actions")}
                   </p>
                   <p className="mt-1 text-[11px] text-white/45">
-                    Generate the org, then create it in your connected runtime.
+                    {tr("Generate the org, then create it in your connected runtime.")}
                   </p>
                 </div>
                 {replacesExistingAgents ? (
                   <div className="rounded-md border border-amber-500/20 bg-amber-500/10 px-3 py-2 text-xs leading-5 text-amber-100/85">
-                    Your current {agentCount === 1 ? "agent will" : `${agentCount} agents will`} be
+                    {tr("Your current")} {agentCount === 1 ? "agent will" : `${agentCount} agents will`} be
                     deleted and replaced by this company when you create it. This action is
                     irreversible and will delete the old agents&apos; workspaces.
                   </div>
                 ) : null}
                 {!canUseAi ? (
                   <p className="text-xs text-amber-200/80">
-                    Connect to a runtime and keep at least one available planning agent in the fleet
-                    to use AI suggestions.
+                    {tr("Connect to a runtime and keep at least one available planning agent in the fleet to use AI suggestions.")}
                   </p>
                 ) : null}
                 {statusLine ? <p className="text-xs text-cyan-100/75">{statusLine}</p> : null}
@@ -356,7 +356,7 @@ export function CompanyBuilderModal({
               <div className="space-y-5">
                 <div className="grid gap-4 md:grid-cols-2">
                   <label className="flex flex-col gap-2 text-xs text-white/60">
-                    Company name
+                    {tr("Company name")}
                     <input
                       className={inputClassName}
                       value={plan.companyName}
@@ -374,7 +374,7 @@ export function CompanyBuilderModal({
                     />
                   </label>
                   <label className="flex flex-col gap-2 text-xs text-white/60">
-                    Shared rules
+                    {tr("Shared rules")}
                     <input
                       className={inputClassName}
                       value={joinCommaList(plan.sharedRules)}
@@ -394,7 +394,7 @@ export function CompanyBuilderModal({
                 </div>
 
                 <label className="flex flex-col gap-2 text-xs text-white/60">
-                  Company summary
+                  {tr("Company summary")}
                   <textarea
                     className={`${textareaClassName} min-h-[110px]`}
                     value={plan.summary}
@@ -414,9 +414,9 @@ export function CompanyBuilderModal({
 
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-sm font-semibold text-white">Org structure</p>
+                    <p className="text-sm font-semibold text-white">{tr("Org structure")}</p>
                     <p className="text-xs text-white/55">
-                      Edit the team before creating agents in your connected runtime.
+                      {tr("Edit the team before creating agents in your connected runtime.")}
                     </p>
                   </div>
                   <button
@@ -436,7 +436,7 @@ export function CompanyBuilderModal({
                     disabled={busy}
                   >
                     <Plus className="h-3.5 w-3.5" />
-                    Add role
+                    {tr("Add role")}
                   </button>
                 </div>
 
@@ -456,13 +456,13 @@ export function CompanyBuilderModal({
                           </div>
                           <div className="min-w-0">
                             <div className="text-xs uppercase tracking-[0.14em] text-white/45">
-                              Role {index + 1}
+                              {tr("Role")} {index + 1}
                             </div>
                             <div className="mt-2 text-sm font-semibold text-white">
                               {role.title || "Untitled role"}
                             </div>
                             <div className="mt-1 text-xs text-white/45">
-                              3D avatar preview generated for this role.
+                              {tr("3D avatar preview generated for this role.")}
                             </div>
                           </div>
                         </div>
@@ -488,7 +488,7 @@ export function CompanyBuilderModal({
 
                       <div className="grid gap-4 md:grid-cols-2">
                         <label className="flex flex-col gap-2 text-xs text-white/60">
-                          Name
+                          {tr("Name")}
                           <input
                             className={inputClassName}
                             value={role.title}
@@ -510,7 +510,7 @@ export function CompanyBuilderModal({
                           />
                         </label>
                         <label className="flex flex-col gap-2 text-xs text-white/60">
-                          Emoji
+                          {tr("Emoji")}
                           <input
                             className={inputClassName}
                             value={role.emoji}
@@ -535,7 +535,7 @@ export function CompanyBuilderModal({
 
                       <div className="mt-4 grid gap-4 md:grid-cols-2">
                         <label className="flex flex-col gap-2 text-xs text-white/60">
-                          Purpose
+                          {tr("Purpose")}
                           <textarea
                             className={textareaClassName}
                             value={role.purpose}
@@ -557,7 +557,7 @@ export function CompanyBuilderModal({
                           />
                         </label>
                         <label className="flex flex-col gap-2 text-xs text-white/60">
-                          Soul
+                          {tr("Soul")}
                           <textarea
                             className={textareaClassName}
                             value={role.soul}
@@ -582,7 +582,7 @@ export function CompanyBuilderModal({
 
                       <div className="mt-4 grid gap-4 md:grid-cols-2">
                         <label className="flex flex-col gap-2 text-xs text-white/60">
-                          Responsibilities
+                          {tr("Responsibilities")}
                           <input
                             className={inputClassName}
                             value={joinCommaList(role.responsibilities)}
@@ -607,7 +607,7 @@ export function CompanyBuilderModal({
                           />
                         </label>
                         <label className="flex flex-col gap-2 text-xs text-white/60">
-                          Collaborators
+                          {tr("Collaborators")}
                           <input
                             className={inputClassName}
                             value={joinCommaList(role.collaborators)}
@@ -632,7 +632,7 @@ export function CompanyBuilderModal({
                           />
                         </label>
                         <label className="flex flex-col gap-2 text-xs text-white/60">
-                          Tool notes
+                          {tr("Tool notes")}
                           <input
                             className={inputClassName}
                             value={joinCommaList(role.tools)}
@@ -654,7 +654,7 @@ export function CompanyBuilderModal({
                           />
                         </label>
                         <label className="flex flex-col gap-2 text-xs text-white/60">
-                          Heartbeat checklist
+                          {tr("Heartbeat checklist")}
                           <input
                             className={inputClassName}
                             value={joinCommaList(role.heartbeat)}
@@ -684,11 +684,9 @@ export function CompanyBuilderModal({
               <div className="flex h-full items-center justify-center rounded-2xl border border-dashed border-white/10 bg-white/[0.02] p-8 text-center">
                 <div className="max-w-md space-y-3">
                   <Sparkles className="mx-auto h-8 w-8 text-cyan-300/70" />
-                  <p className="text-lg font-semibold text-white">No company generated yet</p>
+                  <p className="text-lg font-semibold text-white">{tr("No company generated yet")}</p>
                   <p className="text-sm text-white/55">
-                    Start by describing the company. Claw3D will create the improved brief
-                    automatically, then you can generate and edit the org structure before anything
-                    is created.
+                    {tr("Start by describing the company. Claw3D will create the improved brief automatically, then you can generate and edit the org structure before anything is created.")}
                   </p>
                 </div>
               </div>
@@ -704,7 +702,7 @@ export function CompanyBuilderModal({
               {statusLine?.trim() || "Working on your company."}
             </p>
             <p className="mt-2 text-xs leading-5 text-white/55">
-              Claw3D is using your connected runtime right now. Please wait until this finishes.
+              {tr("Claw3D is using your connected runtime right now. Please wait until this finishes.")}
             </p>
             <div className="mt-5 flex gap-2">
               {Array.from({ length: 4 }, (_, index) => (
@@ -722,9 +720,9 @@ export function CompanyBuilderModal({
         <div className="fixed inset-0 z-[100115] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
           <div className="w-full max-w-lg rounded-2xl border border-white/10 bg-[#0b1119] p-6 shadow-2xl">
             <div className="space-y-2">
-              <p className="text-sm font-semibold text-white">Replace current agents?</p>
+              <p className="text-sm font-semibold text-white">{tr("Replace current agents?")}</p>
               <p className="text-sm leading-6 text-white/65">
-                Your current {agentCount === 1 ? "agent will" : `${agentCount} agents will`} be
+                {tr("Your current")} {agentCount === 1 ? "agent will" : `${agentCount} agents will`} be
                 deleted and replaced by this new company. This action is irreversible and will
                 delete the old agents&apos; workspaces. Are you sure you want to continue?
               </p>
@@ -738,7 +736,7 @@ export function CompanyBuilderModal({
                 }}
                 disabled={busy}
               >
-                Cancel
+                {tr("Cancel")}
               </button>
               <button
                 type="button"
@@ -749,7 +747,7 @@ export function CompanyBuilderModal({
                 }}
                 disabled={busy}
               >
-                Create Company
+                {tr("Create Company")}
               </button>
             </div>
           </div>
@@ -761,10 +759,10 @@ export function CompanyBuilderModal({
             <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.14em] text-cyan-200/70">
-                  Org Chart Preview
+                  {tr("Org Chart Preview")}
                 </p>
                 <p className="mt-2 text-sm text-white/60">
-                  Hover any avatar to inspect the role brief, responsibilities, and collaborators.
+                  {tr("Hover any avatar to inspect the role brief, responsibilities, and collaborators.")}
                 </p>
               </div>
               <button
@@ -802,7 +800,7 @@ export function CompanyBuilderModal({
                         className="h-full w-full"
                       />
                     </div>
-                    <p className="mt-3 text-xs uppercase tracking-[0.14em] text-cyan-100/65">Role 1</p>
+                    <p className="mt-3 text-xs uppercase tracking-[0.14em] text-cyan-100/65">{tr("Role 1")}</p>
                     <p className="mt-1 text-lg font-semibold text-white">
                       {plan.roles[0].title || "Untitled role"}
                     </p>
@@ -838,7 +836,7 @@ export function CompanyBuilderModal({
                               />
                             </div>
                             <p className="mt-3 text-xs uppercase tracking-[0.14em] text-white/45">
-                              Role {index + 2}
+                              {tr("Role")} {index + 2}
                             </p>
                             <p className="mt-1 text-base font-semibold text-white">
                               {role.title || "Untitled role"}
@@ -857,7 +855,7 @@ export function CompanyBuilderModal({
                     <div className="space-y-4">
                       <div>
                         <p className="text-xs uppercase tracking-[0.14em] text-cyan-100/65">
-                          Active Role
+                          {tr("Active Role")}
                         </p>
                         <p className="mt-2 text-xl font-semibold text-white">
                           {hoveredOrgRole.title || "Untitled role"}
@@ -868,7 +866,7 @@ export function CompanyBuilderModal({
                       </div>
                       <div className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3">
                         <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-cyan-100/65">
-                          Purpose
+                          {tr("Purpose")}
                         </p>
                         <p className="mt-2 text-sm leading-6 text-white/75">
                           {hoveredOrgRole.purpose || "No purpose yet."}
@@ -880,7 +878,7 @@ export function CompanyBuilderModal({
                       {renderRoleFacts("Heartbeat", hoveredOrgRole.heartbeat)}
                     </div>
                   ) : (
-                    <p className="text-sm text-white/55">Hover a role to inspect it.</p>
+                    <p className="text-sm text-white/55">{tr("Hover a role to inspect it.")}</p>
                   )}
                 </aside>
               </div>
@@ -894,11 +892,10 @@ export function CompanyBuilderModal({
             <div className="flex items-center justify-between gap-4">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.14em] text-cyan-200/70">
-                  What should the company do?
+                  {tr("What should the company do?")}
                 </p>
                 <p className="mt-2 text-sm text-white/55">
-                  As soon as you submit this, Claw3D will improve the brief using your connected
-                  runtime.
+                  {tr("As soon as you submit this, Claw3D will improve the brief using your connected runtime.")}
                 </p>
               </div>
               <button
@@ -916,7 +913,7 @@ export function CompanyBuilderModal({
             </div>
             <textarea
               className={`${textareaClassName} mt-5 min-h-[220px]`}
-              placeholder="I run a web design company that builds websites, web apps, mobile apps, SEO campaigns, and social media services..."
+              placeholder={tr("I run a web design company that builds websites, web apps, mobile apps, SEO campaigns, and social media services...")}
               value={promptDraft}
               onChange={(event) => {
                 setPromptDraft(event.target.value);
@@ -926,7 +923,7 @@ export function CompanyBuilderModal({
             <div className="mt-5 flex items-center justify-between gap-3">
               <div>
                 <p className="text-xs text-white/45">
-                  The improved brief becomes the main editable input for generation.
+                  {tr("The improved brief becomes the main editable input for generation.")}
                 </p>
                 {error ? <p className="mt-2 text-xs text-red-200">{error}</p> : null}
               </div>
@@ -951,7 +948,7 @@ export function CompanyBuilderModal({
                 disabled={!canUseAi || promptDraft.trim().length === 0 || busy}
               >
                 <Sparkles className="h-4 w-4" />
-                Generate Company
+                {tr("Generate Company")}
               </button>
             </div>
           </div>

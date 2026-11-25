@@ -83,6 +83,8 @@ npm run typecheck
 npm run fixture:demo      # regenerate the synthetic replay scenario
 ```
 
+The interface is Korean by default (`NEXT_PUBLIC_UI_LOCALE=en` for English); see [docs/i18n.md](docs/i18n.md).
+
 Project layout for the Claude Code parts:
 
 ```text

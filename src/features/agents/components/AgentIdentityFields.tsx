@@ -1,4 +1,5 @@
 "use client";
+import { tr } from "@/lib/i18n";
 
 export type AgentIdentityValues = {
   name: string;
@@ -24,11 +25,11 @@ export function AgentIdentityFields({
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       <label className="flex flex-col gap-2 text-xs text-muted-foreground">
-        Name
+        {tr("Name")}
         <input
           className={inputClassName}
           value={values.name}
-          placeholder="e.g. Luke"
+          placeholder={tr("e.g. Luke")}
           disabled={disabled}
           onChange={(event) => {
             onChange("name", event.target.value);
@@ -36,11 +37,11 @@ export function AgentIdentityFields({
         />
       </label>
       <label className="flex flex-col gap-2 text-xs text-muted-foreground">
-        Role
+        {tr("Role")}
         <input
           className={inputClassName}
           value={values.creature}
-          placeholder="e.g. Product Designer"
+          placeholder={tr("e.g. Product Designer")}
           disabled={disabled}
           onChange={(event) => {
             onChange("creature", event.target.value);
@@ -48,11 +49,11 @@ export function AgentIdentityFields({
         />
       </label>
       <label className="flex flex-col gap-2 text-xs text-muted-foreground">
-        Vibe
+        {tr("Vibe")}
         <input
           className={inputClassName}
           value={values.vibe}
-          placeholder="e.g. Calm, sharp, and helpful"
+          placeholder={tr("e.g. Calm, sharp, and helpful")}
           disabled={disabled}
           onChange={(event) => {
             onChange("vibe", event.target.value);
@@ -60,11 +61,11 @@ export function AgentIdentityFields({
         />
       </label>
       <label className="flex flex-col gap-2 text-xs text-muted-foreground">
-        Emoji
+        {tr("Emoji")}
         <input
           className={inputClassName}
           value={values.emoji}
-          placeholder="e.g. ✨"
+          placeholder={tr("e.g. ✨")}
           disabled={disabled}
           onChange={(event) => {
             onChange("emoji", event.target.value);

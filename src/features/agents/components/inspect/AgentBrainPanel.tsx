@@ -16,6 +16,7 @@ import {
   serializePersonalityFiles,
 } from "@/lib/agents/personalityBuilder";
 import { useAgentFilesEditor } from "@/features/agents/hooks/useAgentFilesEditor";
+import { tr } from "@/lib/i18n";
 
 export type AgentBrainPanelProps = {
   client: GatewayClient;
@@ -52,12 +53,12 @@ const AgentFileProvenance = ({
     <div className="rounded-md border border-border/50 bg-black/20 px-3 py-2 text-[11px] text-muted-foreground">
       {workspace ? (
         <div>
-          Workspace: <span className="font-mono text-foreground">{workspace}</span>
+          {tr("Workspace:")} <span className="font-mono text-foreground">{workspace}</span>
         </div>
       ) : null}
       {path ? (
         <div>
-          File: <span className="font-mono text-foreground">{path}</span>
+          {tr("File:")} <span className="font-mono text-foreground">{path}</span>
         </div>
       ) : null}
     </div>
@@ -199,8 +200,7 @@ export const AgentBrainPanel = ({
           {AGENT_FILE_META["IDENTITY.md"].hint}
         </div>
         <div className="text-xs text-muted-foreground">
-          Changing <span className="font-medium text-foreground">Name</span> here also renames the live agent
-          when you save.
+          {tr("Changing")} <span className="font-medium text-foreground">{tr("Name")}</span> {tr("here also renames the live agent when you save.")}
         </div>
         <AgentFileProvenance
           path={agentFiles["IDENTITY.md"].path}
@@ -265,7 +265,7 @@ export const AgentBrainPanel = ({
                   void handleInitializeMissingFiles();
                 }}
               >
-                Initialize missing files
+                {tr("Initialize missing files")}
               </button>
             ) : null}
             <button
@@ -274,7 +274,7 @@ export const AgentBrainPanel = ({
               disabled={agentFilesLoading || agentFilesSaving}
               onClick={onCancel}
             >
-              Cancel
+              {tr("Cancel")}
             </button>
             <button
               type="button"
@@ -284,7 +284,7 @@ export const AgentBrainPanel = ({
                 void handleSave();
               }}
             >
-              Save
+              {tr("Save")}
             </button>
           </div>
 

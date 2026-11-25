@@ -6,6 +6,7 @@
 import { useEffect, useRef } from "react";
 import confetti from "canvas-confetti";
 import { Building2, Rocket } from "lucide-react";
+import { tr } from "@/lib/i18n";
 
 export const CompleteStep = ({
   companyCreated = false,
@@ -84,7 +85,7 @@ export const CompleteStep = ({
       </div>
 
       <p className="text-[11px] text-white/35">
-        You can always re-run onboarding from Studio settings.
+        {tr("You can always re-run onboarding from Studio settings.")}
       </p>
     </div>
   );

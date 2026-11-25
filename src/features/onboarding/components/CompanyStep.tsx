@@ -1,4 +1,5 @@
 import { Building2, Sparkles, Users, Wand2 } from "lucide-react";
+import { tr } from "@/lib/i18n";
 
 export type CompanyStepProps = {
   connected: boolean;
@@ -21,10 +22,9 @@ export const CompanyStep = ({
             <Building2 className="h-5 w-5 text-amber-300" />
           </div>
           <div className="space-y-2">
-            <p className="text-sm font-semibold text-white">Bootstrap your company with AI</p>
+            <p className="text-sm font-semibold text-white">{tr("Bootstrap your company with AI")}</p>
             <p className="text-xs leading-5 text-white/60">
-              Describe what your company does and Claw3D can turn that into a full org structure
-              with specialized agents, working files, and role instructions.
+              {tr("Describe what your company does and Claw3D can turn that into a full org structure with specialized agents, working files, and role instructions.")}
             </p>
           </div>
         </div>
@@ -68,13 +68,12 @@ export const CompanyStep = ({
               onClick={onOpenCompanyBuilder}
             >
               <Sparkles className="h-3.5 w-3.5" />
-              Open Company Builder
+              {tr("Open Company Builder")}
             </button>
           </div>
         ) : (
           <div className="rounded-md border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-xs text-amber-100/80">
-            Connect to a runtime and keep at least one planning agent available to generate the
-            company with AI.
+            {tr("Connect to a runtime and keep at least one planning agent available to generate the company with AI.")}
           </div>
         )}
       </div>
