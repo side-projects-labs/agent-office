@@ -35,8 +35,9 @@ process.stdin.on("end", () => {
       message: raw.message,
       notification_type: raw.notification_type,
     };
-    fs.mkdirSync(path.dirname(eventsPath), { recursive: true });
-    fs.appendFileSync(eventsPath, `${JSON.stringify(line)}\n`);
+    // Prompts and tool inputs end up here: keep the folder and file private.
+    fs.mkdirSync(path.dirname(eventsPath), { recursive: true, mode: 0o700 });
+    fs.appendFileSync(eventsPath, `${JSON.stringify(line)}\n`, { mode: 0o600 });
   } catch {
     // swallow: observation must never break the agent
   }

@@ -16,7 +16,10 @@ export const isReplayMode = (): boolean => process.env.NEXT_PUBLIC_REPLAY_MODE =
 const FIXTURE_URL = "/replay/demo.jsonl";
 const LOOP_GAP_MS = 6000;
 
-type Listener = ((event: any) => void) | null;
+type SocketEvent = { data?: string; code?: number; reason?: string };
+type Listener = ((event: SocketEvent) => void) | null;
+type RequestFrame = { type?: string; id?: string; method?: string; params?: unknown };
+type OutgoingFrame = { type?: string; event?: string; [key: string]: unknown };
 type HookEvent = { t: number } & Record<string, unknown>;
 
 export class ReplayWebSocket {
@@ -48,12 +51,13 @@ export class ReplayWebSocket {
 
   send(data: string) {
     if (this.readyState !== 1) return;
-    let frame: any;
+    let parsed: unknown;
     try {
-      frame = JSON.parse(data);
+      parsed = JSON.parse(data);
     } catch {
       return;
     }
+    const frame = parsed as RequestFrame | null;
     if (!frame || frame.type !== "req" || typeof frame.id !== "string") return;
 
     if (frame.method === "connect") {
@@ -92,7 +96,7 @@ export class ReplayWebSocket {
   }
 
   /** Events get one monotonically increasing seq per connection. */
-  private emit(frame: any) {
+  private emit(frame: OutgoingFrame) {
     if (this.readyState !== 1) return;
     const out = frame.type === "event" && frame.event !== "connect.challenge" ? { ...frame, seq: this.seq++ } : frame;
     this.onmessage?.({ data: JSON.stringify(out) });

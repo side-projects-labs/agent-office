@@ -3,6 +3,7 @@ import { createRequire } from "node:module";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import type { Avatar, Frame, Workspace } from "../helpers/claudeCodeTypes";
 
 const require = createRequire(import.meta.url);
 const { createState } = require("../../server/claude-code/core.js");
@@ -53,7 +54,7 @@ describe("loadConfig", () => {
       }),
     );
     const out = loadConfig({ env: { AGENT_OFFICE_CONFIG: cfg, AGENT_OFFICE_WORKDIR: root }, home: root });
-    expect(out.workspaces.map((w: any) => w.id)).toEqual(["web", "api", "default"]);
+    expect(out.workspaces.map((w: Workspace) => w.id)).toEqual(["web", "api", "default"]);
     expect(out.workspaces[0].label).toBe("Web App");
     expect(out.workspaces[1].label).toBe("api");
     expect(out.defaultWorkspaceId).toBe("api");
@@ -73,7 +74,7 @@ describe("loadConfig", () => {
 
 describe("composePersona", () => {
   it("combines the base persona, identity and wizard files, and skips empty ones", () => {
-    const agent: any = {
+    const agent: Pick<Avatar, "name" | "role" | "files"> = {
       name: "리서처",
       role: "Claude Code",
       files: {
@@ -97,17 +98,17 @@ describe("composePersona", () => {
   });
 
   it("works without a base persona and parses identity lines", () => {
-    expect(composePersona("", { name: "A", files: {} } as any)).toBe('이 사무실에서 당신의 이름은 "A"입니다.');
+    expect(composePersona("", { name: "A", files: {} })).toBe('이 사무실에서 당신의 이름은 "A"입니다.');
     expect(parseIdentity("- Name: A\n- Creature: \n- Vibe: v")).toEqual({ name: "A", vibe: "v" });
   });
 });
 
 describe("runner workspaces and persistence", () => {
-  const make = (workspaces: any[], file: string, state = createState(), frames: any[] = []) => {
+  const make = (workspaces: Workspace[], file: string, state = createState(), frames: Frame[] = []) => {
     const store = createProfileStore(file);
     const runner = createRunner({
       state,
-      broadcast: (f: any) => frames.push(f),
+      broadcast: (f: Frame) => frames.push(f),
       workspaces,
       store,
       eventsPath: path.join(root, "events.jsonl"),
@@ -167,7 +168,7 @@ describe("runner workspaces and persistence", () => {
     const ag = first.runner.createAgent({ name: "Keeper" });
     first.runner.setFile(ag.id, "SOUL.md", "기억한다.");
     first.runner.send({ agentId: ag.id, message: "hi", runId: "r1" });
-    await waitFor(() => first.frames.some((f: any) => f.event === "chat" && f.payload.state === "final"));
+    await waitFor(() => first.frames.some((f: Frame) => f.event === "chat" && f.payload.state === "final"));
     const saved = JSON.parse(fs.readFileSync(file, "utf8"));
     expect(saved.agents[0]).toMatchObject({ id: ag.id, name: "Keeper", workspaceId: "a", started: true, sessionId: ag.sessionId });
     expect(fs.statSync(file).mode & 0o777).toBe(0o600);
@@ -179,7 +180,7 @@ describe("runner workspaces and persistence", () => {
     expect(back.files["SOUL.md"]).toBe("기억한다.");
 
     second.runner.send({ agentId: ag.id, message: "again", runId: "r2" });
-    await waitFor(() => second.frames.some((f: any) => f.event === "chat" && f.payload.state === "final"));
+    await waitFor(() => second.frames.some((f: Frame) => f.event === "chat" && f.payload.state === "final"));
     const calls = fs.readFileSync(log, "utf8").trim().split("\n").map((l) => JSON.parse(l));
     expect(calls[1].args).toContain("--resume");
     expect(calls[1].args[calls[1].args.indexOf("--resume") + 1]).toBe(ag.sessionId);
@@ -202,7 +203,7 @@ describe("runner workspaces and persistence", () => {
     const second = make([{ id: "b", label: "b", path: b }], file);
     expect(second.runner.restore(second.store.load())).toBe(0);
     second.runner.createAgent({ name: "New" }); // triggers a save
-    const saved = JSON.parse(fs.readFileSync(file, "utf8")).agents.map((x: any) => x.name).sort();
+    const saved = JSON.parse(fs.readFileSync(file, "utf8")).agents.map((x: { name: string }) => x.name).sort();
     expect(saved).toEqual(["Kept", "New"]);
   });
 });

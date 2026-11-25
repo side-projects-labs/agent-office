@@ -3,6 +3,7 @@ import { createRequire } from "node:module";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import type { Avatar, Frame, Runner, State } from "../helpers/claudeCodeTypes";
 
 const require = createRequire(import.meta.url);
 const { createState, applyHookEvent } = require("../../server/claude-code/core.js");
@@ -21,9 +22,9 @@ const waitFor = async (pred: () => boolean, ms = 10000) => {
 describe("claude-code runner", () => {
   let dir: string;
   let log: string;
-  let frames: any[];
-  let state: any;
-  let runner: any;
+  let frames: Frame[];
+  let state: State;
+  let runner: Runner;
 
   beforeEach(() => {
     dir = fs.mkdtempSync(path.join(os.tmpdir(), "runner-"));
@@ -36,7 +37,7 @@ describe("claude-code runner", () => {
     state = createState();
     runner = createRunner({
       state,
-      broadcast: (f: any) => frames.push(f),
+      broadcast: (f: Frame) => frames.push(f),
       workspaces: [{ id: "default", label: "default", path: dir }],
       eventsPath: path.join(dir, "events.jsonl"),
       adapterUrl: "http://127.0.0.1:1",
@@ -59,9 +60,9 @@ describe("claude-code runner", () => {
     expect(runner.send({ agentId: agent.id, message: "hi", runId: "r1" }).ok).toBe(true);
     await waitFor(() => chat("final").length === 1);
 
-    expect(chat("delta").map((f) => f.payload.message.content)).toEqual(["Hel", "Hello"]);
+    expect(chat("delta").map((f) => f.payload.message?.content)).toEqual(["Hel", "Hello"]);
     expect(chat("final")[0].payload).toMatchObject({ runId: "r1", message: { content: "Hello" } });
-    expect(agent.history.map((m: any) => m.role)).toEqual(["user", "assistant"]);
+    expect(agent.history.map((m: { role: string }) => m.role)).toEqual(["user", "assistant"]);
 
     runner.send({ agentId: agent.id, message: "again", runId: "r2" });
     await waitFor(() => chat("final").length === 2);
@@ -90,14 +91,16 @@ describe("claude-code runner", () => {
     const settings = JSON.parse(call.args[call.args.indexOf("--settings") + 1]);
     expect(Object.keys(settings.hooks)).toContain("PermissionRequest");
     expect(call.args[call.args.indexOf("--setting-sources") + 1]).toBe("");
-    expect(call.args[call.args.indexOf("--allowedTools") + 1]).toBe("Read,Glob,Grep");
+    // No blanket tool allow: a bare "Read" would approve reads anywhere on disk.
+    expect(call.args).not.toContain("--allowedTools");
     expect(hookSettings("/a", "/b").hooks.Stop).toBeTruthy();
   });
 
   it("rejects observed sessions, empty messages, and overlapping runs", async () => {
     applyHookEvent(state, { event: "SessionStart", session_id: "abcd1234", cwd: "/x", ts: 1 });
-    const observed = [...state.agents.values()].find((a: any) => !a.managed);
-    expect(runner.send({ agentId: observed.id, message: "hi", runId: "r" })).toMatchObject({ ok: false, code: "not_controllable" });
+    const observed = [...state.agents.values()].find((a: Avatar) => !a.managed);
+    expect(observed).toBeDefined();
+    expect(runner.send({ agentId: observed?.id ?? "", message: "hi", runId: "r" })).toMatchObject({ ok: false, code: "not_controllable" });
 
     const agent = runner.createAgent({ name: "Builder" });
     expect(runner.send({ agentId: agent.id, message: "  ", runId: "r" })).toMatchObject({ ok: false, code: "empty" });
@@ -139,7 +142,7 @@ describe("core with managed agents", () => {
     expect(agent.history).toHaveLength(0);
 
     const stop = ev("Stop");
-    expect(stop.map((f: any) => f.event)).toEqual(["agent"]);
+    expect(stop.map((f: Frame) => f.event)).toEqual(["agent"]);
     ev("SessionEnd");
     expect(state.agents.has("run-a-1")).toBe(true);
     expect(state.agents.size).toBe(1);
@@ -149,11 +152,11 @@ describe("core with managed agents", () => {
 describe("runner busy state", () => {
   it("accepts a new instruction as soon as the result arrives, even if the process lingers", async () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), "runner-busy-"));
-    const frames: any[] = [];
+    const frames: Frame[] = [];
     const state = createState();
     const runner = createRunner({
       state,
-      broadcast: (f: any) => frames.push(f),
+      broadcast: (f: Frame) => frames.push(f),
       workspaces: [{ id: "default", label: "default", path: dir }],
       eventsPath: path.join(dir, "events.jsonl"),
       adapterUrl: "http://127.0.0.1:1",
@@ -185,11 +188,11 @@ describe("runner persona", () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), "runner-persona-"));
     const log = path.join(dir, "fake.log");
     process.env.FAKE_CLAUDE_LOG = log;
-    const frames: any[] = [];
+    const frames: Frame[] = [];
     const state = createState();
     const runner = createRunner({
       state,
-      broadcast: (f: any) => frames.push(f),
+      broadcast: (f: Frame) => frames.push(f),
       workspaces: [{ id: "default", label: "default", path: dir }],
       eventsPath: path.join(dir, "events.jsonl"),
       adapterUrl: "http://127.0.0.1:1",
@@ -216,5 +219,31 @@ describe("runner persona", () => {
     const offPrompt = off[off.indexOf("--append-system-prompt") + 1];
     expect(offPrompt).not.toContain(DEFAULT_PERSONA);
     expect(offPrompt).toContain('이름은 "P"');
+  });
+});
+
+describe("runner tool allow list", () => {
+  it("passes --allowedTools only when explicitly configured", async () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "runner-allow-"));
+    const log = path.join(dir, "fake.log");
+    process.env.FAKE_CLAUDE_LOG = log;
+    const frames: Frame[] = [];
+    const runner: Runner = createRunner({
+      state: createState(),
+      broadcast: (f: Frame) => frames.push(f),
+      workspaces: [{ id: "default", label: "default", path: dir }],
+      eventsPath: path.join(dir, "events.jsonl"),
+      adapterUrl: "http://127.0.0.1:1",
+      claudeBin: fake,
+      allowedTools: ["WebSearch"],
+    });
+    const agent = runner.createAgent({ name: "Allow" });
+    runner.send({ agentId: agent.id, message: "hi", runId: "r1" });
+    await waitFor(() => frames.some((f) => f.event === "chat" && f.payload.state === "final"));
+    const call = JSON.parse(fs.readFileSync(log, "utf8").trim().split("\n")[0]);
+    expect(call.args[call.args.indexOf("--allowedTools") + 1]).toBe("WebSearch");
+    runner.stopAll();
+    delete process.env.FAKE_CLAUDE_LOG;
+    fs.rmSync(dir, { recursive: true, force: true });
   });
 });

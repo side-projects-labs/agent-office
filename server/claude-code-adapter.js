@@ -13,7 +13,6 @@
  * workspace, and permission requests are answered from the UI.
  */
 
-const fs = require("fs");
 const http = require("http");
 const os = require("os");
 const path = require("path");
@@ -25,6 +24,7 @@ const { createHandler, buildHello, resOk, resErr } = require("./claude-code/meth
 const { createRunner } = require("./claude-code/runner");
 const { loadConfig } = require("./claude-code/config");
 const { createProfileStore } = require("./claude-code/store");
+const { createTail } = require("./claude-code/tail");
 
 const PORT = parseInt(process.env.CLAUDE_ADAPTER_PORT || process.env.DEMO_ADAPTER_PORT || "18789", 10);
 const EVENTS_PATH =
@@ -223,34 +223,12 @@ function ingestLine(line) {
 }
 
 function startTail() {
-  fs.mkdirSync(path.dirname(EVENTS_PATH), { recursive: true });
-  if (!fs.existsSync(EVENTS_PATH)) fs.writeFileSync(EVENTS_PATH, "");
-  let offset = fs.statSync(EVENTS_PATH).size; // live mode: start at end
-  let carry = "";
-
-  const timer = setInterval(() => {
-    let size;
-    try {
-      size = fs.statSync(EVENTS_PATH).size;
-    } catch {
-      return;
-    }
-    if (size < offset) offset = 0; // truncated/rotated
-    if (size === offset) return;
-    const fd = fs.openSync(EVENTS_PATH, "r");
-    try {
-      const buf = Buffer.alloc(size - offset);
-      fs.readSync(fd, buf, 0, buf.length, offset);
-      offset = size;
-      const lines = (carry + buf.toString("utf8")).split("\n");
-      carry = lines.pop() ?? "";
-      for (const line of lines) if (line.trim()) ingestLine(line);
-    } finally {
-      fs.closeSync(fd);
-    }
-  }, POLL_MS);
-  timer.unref?.();
-  return timer;
+  return createTail({
+    file: EVENTS_PATH,
+    onLine: ingestLine,
+    maxBytes: Number(process.env.AGENT_OFFICE_EVENTS_MAX_BYTES) || undefined,
+    pollMs: POLL_MS,
+  });
 }
 
 function startAdapter() {
@@ -330,7 +308,11 @@ function startAdapter() {
       }
       console.log(`[claude-code-adapter] model ${c.model}, max ${c.maxTurns} turns, est. budget cap $${c.maxBudgetUsd}/run`);
       console.log(`[claude-code-adapter] persona: ${c.persona ? "on (default: Korean replies, code untouched)" : "off"}`);
-      console.log(`[claude-code-adapter] auto-allowed tools: ${c.allowedTools.join(", ")} (everything else asks in the UI)`);
+      console.log(
+        c.allowedTools.length > 0
+          ? `[claude-code-adapter] auto-allowed tools: ${c.allowedTools.join(", ")} (everything else asks in the UI)`
+          : "[claude-code-adapter] reads inside the workspace run automatically; everything else asks in the UI",
+      );
       console.log(
         c.allowApiKey
           ? "[claude-code-adapter] WARNING: AGENT_OFFICE_ALLOW_API_KEY=1, runs may bill your API key"

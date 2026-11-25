@@ -16,7 +16,7 @@ afterEach(() => {
   act(() => setRunnerOptions(null));
 });
 
-const renderWizard = (onCreateAgent = vi.fn(async (_identity: unknown) => "agent-1")) => {
+const renderWizard = (onCreateAgent = vi.fn<(identity: unknown) => Promise<string>>(async () => "agent-1")) => {
   render(
     <AgentCreateWizardModal
       open

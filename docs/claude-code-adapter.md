@@ -116,9 +116,16 @@ The runner is on whenever at least one valid workspace exists.
   `claude -p` process in the avatar's workspace; follow-ups resume the same
   session (`--session-id` first, then `--resume`).
 - Your own interactive sessions are never controlled; sending to them is rejected.
-- **Permissions**: `Read`, `Glob`, `Grep` run automatically. Everything else
-  (`Write`, `Edit`, `Bash`, ...) is sent to the UI as an approval card; Allow
-  runs it, Deny blocks it. Unanswered requests are denied after 9 minutes.
+- **Permissions**: Claude Code's own default rules apply. Reading files inside the
+  avatar's workspace and read-only shell commands there (`ls`, `cat`, `grep`, ...) run
+  without asking. Everything else is sent to the UI as an approval card: writes and
+  edits, other shell commands, and **any access outside the workspace** (even a
+  `cat` or `ls`). Allow runs it once, Deny blocks it. Unanswered requests are denied
+  after 9 minutes. There is no blanket tool allow-list: a bare `--allowedTools Read`
+  would approve reads of any path, which let avatars read outside their folder.
+- **Not a sandbox**: this is Claude Code's permission system, not OS isolation. A
+  command you approve runs with your full user privileges, so read approval cards
+  before pressing Allow. Treat the workspace as a convenience boundary, not a jail.
 - **Hooks**: injected per process with `--settings` (and `--setting-sources ""`),
   so your own Claude Code settings are untouched and not loaded by runner runs.
 - **Billing**: runs use your Claude login (subscription quota). `ANTHROPIC_API_KEY`

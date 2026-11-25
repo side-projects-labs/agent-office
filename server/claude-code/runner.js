@@ -106,7 +106,10 @@ function createRunner(options) {
     model = process.env.AGENT_OFFICE_MODEL || "claude-sonnet-5-5",
     maxBudgetUsd = Number(process.env.AGENT_OFFICE_MAX_BUDGET_USD || 1),
     maxTurns = Number(process.env.AGENT_OFFICE_MAX_TURNS || 20),
-    allowedTools = ["Read", "Glob", "Grep"],
+    // Empty on purpose: a bare tool name in --allowedTools approves that tool for ANY path,
+    // which let avatars read files outside their workspace. Without it, Claude Code runs
+    // reads inside the working directory unprompted and asks (-> UI) for everything else.
+    allowedTools = [],
     allowApiKey = process.env.AGENT_OFFICE_ALLOW_API_KEY === "1",
     persona = resolvePersona(process.env.AGENT_OFFICE_PERSONA),
     log = () => {},
@@ -227,7 +230,7 @@ function createRunner(options) {
       "--model", model,
       "--max-turns", String(maxTurns),
       "--max-budget-usd", String(maxBudgetUsd),
-      "--allowedTools", allowedTools.join(","),
+      ...(allowedTools.length > 0 ? ["--allowedTools", allowedTools.join(",")] : []),
       "--setting-sources", "",
       "--settings", JSON.stringify(hookSettings(hookPath, approvalHookPath)),
       "--append-system-prompt", composePersona(persona, agent),

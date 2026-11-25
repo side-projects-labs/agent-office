@@ -2,7 +2,13 @@
 
 Keep repository instructions generic and safe for open source.
 
-This repo is a frontend for OpenClaw. Keep any OpenClaw runtime checkout separate from this repository.
+This repo is agent-office, a fork of Claw3D that adds a Claude Code adapter (`server/claude-code*`), a runner for giving avatars work through `claude -p`, and an in-browser replay mode (`src/lib/gateway/replay`). It still works as a frontend for OpenClaw/Hermes gateways. Keep any OpenClaw runtime checkout separate from this repository. See README.md and docs/claude-code-adapter.md.
+
+Conventions for the Claude Code parts:
+- `server/claude-code/*.js` is plain CommonJS; `core.js` and `methods.js` must stay free of Node built-ins because the browser replay imports them.
+- The UI must never send filesystem paths for avatars; it sends workspace ids that the adapter resolves from its config.
+- Tests there use fake `claude` binaries in `tests/fixtures`, so they never spend real usage. ESLint forbids `any`; type test doubles with `tests/helpers/claudeCodeTypes.ts`.
+- The deployed replay site must stay observe-only (`NEXT_PUBLIC_REPLAY_MODE=1`, `npm run build:replay`).
 
 Do not modify the OpenClaw source code. When the user asks for changes, they are asking for changes to this app. Your solutions should be applied to this app but to understand the full context of implementing your solution, you will need to search through OpenClaw's source code.
 
